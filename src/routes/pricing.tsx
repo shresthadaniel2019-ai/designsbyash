@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PricingSection } from "@/components/PricingSection";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -11,9 +12,5 @@ export const Route = createFileRoute("/pricing")({
 });
 
 function PricingPage() {
-  return (
-    <h1 className="text-wood-950 py-32 text-center text-4xl font-bold">
-      Pricing — Coming Soon
-    </h1>
-  );
+  return <PricingSection />;
 }
