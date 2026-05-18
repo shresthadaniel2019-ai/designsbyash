@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PricingSection } from "@/components/PricingSection";
 import {
   Check,
   ChevronLeft,
@@ -452,6 +453,7 @@ function Index() {
       <MeetTheTeam />
       <FeaturesStats />
       <PageSpeed />
+      <PricingSection />
     </>
   );
 }
