@@ -178,12 +178,124 @@ function YouTubeExplainer() {
   );
 }
 
+const featuredProjects = [
+  { n: "01", title: "Project Name" },
+  { n: "02", title: "Project Name" },
+  { n: "03", title: "Project Name" },
+] as const;
+
+function FeaturedWork() {
+  return (
+    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
+        Featured Work
+      </p>
+      <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold text-center">
+        Custom Websites Built From Scratch
+      </h2>
+      <p className="mt-4 text-wood-600 text-lg max-w-2xl mx-auto text-center">
+        No templates. No page builders. Just clean, efficient code that delivers
+        blazing-fast websites for small businesses.
+      </p>
+
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {featuredProjects.map((p) => (
+          <article
+            key={p.n}
+            className="relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+          >
+            <span className="absolute top-4 left-4 z-10 bg-orange text-white font-bold text-sm w-10 h-10 rounded-full flex items-center justify-center">
+              {p.n}
+            </span>
+            <div className="w-full aspect-[4/3] bg-wood-100 flex items-center justify-center text-wood-400 text-sm">
+              Project Screenshot
+            </div>
+            <div className="p-5">
+              <h3 className="text-wood-950 font-bold text-lg">{p.title}</h3>
+              <p className="text-wood-600 text-sm mt-2 line-clamp-2">
+                Custom website for a small business client. Details coming soon.
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const services: { icon: LucideIcon; title: string; desc: string }[] = [
+  {
+    icon: Monitor,
+    title: "Custom Website Development",
+    desc: "Every website is hand-coded from scratch. We design a site that captures what makes your business unique.",
+  },
+  {
+    icon: Search,
+    title: "Search Engine Optimization",
+    desc: "Professional keyword research and content strategy so search engines find your business easily.",
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile First Design",
+    desc: "Built for mobile screens first — fast, clean, no bloated code weighing things down.",
+  },
+  {
+    icon: Settings,
+    title: "Website Management",
+    desc: "A hand-coded site that ranks higher, loads fast, and meets modern standards — managed by us.",
+  },
+  {
+    icon: Zap,
+    title: "Lightning Fast Speeds",
+    desc: "Our sites score 95+ on Google speed tests, bringing more customers to your door.",
+  },
+  {
+    icon: MapPin,
+    title: "Canadian Crafted",
+    desc: "Our team works right here in Canada. When you need us, we're in your time zone.",
+  },
+];
+
+function Services() {
+  return (
+    <section className="bg-wood-950 py-20 px-6 lg:px-20">
+      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
+        What We Offer
+      </p>
+      <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold text-center">
+        We Handle Your Website So You Can Handle Business
+      </h2>
+      <p className="mt-4 text-wood-400 text-lg max-w-2xl mx-auto text-center">
+        At DesignsbyASH, we handcraft superior websites for small business owners
+        across Canada and beyond.
+      </p>
+
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map(({ icon: Icon, title, desc }) => (
+          <article
+            key={title}
+            className="bg-wood-900 border border-wood-800 rounded-xl p-6 hover:border-orange transition-all duration-300"
+          >
+            <div className="w-12 h-12 rounded-lg bg-orange/10 flex items-center justify-center">
+              <Icon className="w-6 h-6 text-orange" />
+            </div>
+            <h3 className="mt-4 text-white font-bold text-lg">{title}</h3>
+            <p className="mt-2 text-wood-400 text-sm leading-relaxed">{desc}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Index() {
   return (
     <>
       <Hero />
       <TestimonialsCarousel />
       <YouTubeExplainer />
+      <FeaturedWork />
+      <Services />
     </>
   );
 }
