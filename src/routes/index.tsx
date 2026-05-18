@@ -3,9 +3,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronLeft,
   ChevronRight,
+  MapPin,
+  Monitor,
   Play,
   PlayCircle,
+  Search,
+  Settings,
+  Smartphone,
   Star,
+  Zap,
+  type LucideIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
