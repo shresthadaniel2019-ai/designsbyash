@@ -442,6 +442,109 @@ function PageSpeed() {
   );
 }
 
+function WrittenTestimonials() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (direction: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const first = el.firstElementChild as HTMLElement | null;
+    const cardWidth = first?.offsetWidth ?? 380;
+    el.scrollBy({ left: direction * (cardWidth + 24), behavior: "smooth" });
+  };
+
+  return (
+    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
+        Our Testimonials
+      </p>
+      <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold text-center">
+        Trusted Web Designer Across Canada and Beyond
+      </h2>
+
+      <div className="mt-12 relative">
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2"
+        >
+          {Array.from({ length: 10 }).map((_, i) => (
+            <article
+              key={i}
+              className="bg-white rounded-xl p-8 shadow-md snap-start flex-shrink-0 min-w-[85vw] md:min-w-[380px]"
+            >
+              <div className="w-14 h-14 rounded-full bg-wood-200 flex items-center justify-center text-wood-500 font-bold text-lg">
+                CN
+              </div>
+              <p className="mt-4 text-wood-600 italic leading-relaxed">
+                Placeholder testimonial. This will be replaced with a real
+                client review when available.
+              </p>
+              <p className="mt-4 text-wood-950 font-bold text-sm">
+                Client Name
+              </p>
+              <p className="text-wood-500 text-sm">Owner, Business Name</p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-wood-950 font-bold text-sm">5.0</span>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <Star key={s} className="w-4 h-4 fill-amber text-amber" />
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          aria-label="Previous testimonial"
+          onClick={() => scrollByCard(-1)}
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -left-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next testimonial"
+          onClick={() => scrollByCard(1)}
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -right-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="bg-wood-950 py-16 px-6 lg:px-20 text-center relative overflow-hidden">
+      <div
+        aria-hidden
+        className="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-30"
+      />
+      <div
+        aria-hidden
+        className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-30"
+      />
+      <div className="relative z-10">
+        <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+          Reach Out Today
+        </p>
+        <h2 className="mt-3 text-white text-3xl lg:text-4xl font-bold">
+          Let's Create the Website Your Business Deserves
+        </h2>
+        <Link
+          to="/contact"
+          className="mt-6 inline-block bg-orange text-white px-8 py-3.5 rounded-md font-semibold text-lg hover:bg-orange-hover hover:scale-105 transition-all"
+        >
+          Give Us a Call
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function Index() {
   return (
     <>
@@ -454,6 +557,8 @@ function Index() {
       <FeaturesStats />
       <PageSpeed />
       <PricingSection />
+      <WrittenTestimonials />
+      <FinalCTA />
     </>
   );
 }
