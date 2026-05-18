@@ -1,25 +1,23 @@
-## Home — Featured Work + Services
+## Home — Team + Features/Stats + Page Speed
 
-Append two new sections to `src/routes/index.tsx` after `<YouTubeExplainer />`. No other files change.
+Append three sections to `src/routes/index.tsx` after `<Services />`. No other files change.
 
-### Section 1 — `FeaturedWork`
-- `<section className="bg-wood-50 py-20 px-6 lg:px-20">`
-- Centered eyebrow + h2 + paragraph (exact copy/classes from spec).
-- `grid grid-cols-1 md:grid-cols-3 gap-8 mt-12`.
-- 3 cards from `[{ n: "01" }, { n: "02" }, { n: "03" }]`:
-  - Card: `relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300`.
-  - Number badge: `absolute top-4 left-4 z-10 bg-orange text-white font-bold text-sm w-10 h-10 rounded-full flex items-center justify-center`.
-  - Image placeholder: `w-full aspect-[4/3] bg-wood-100 flex items-center justify-center text-wood-400 text-sm` → "Project Screenshot".
-  - Content `p-5`: title `text-wood-950 font-bold text-lg`, description `text-wood-600 text-sm mt-2 line-clamp-2`.
+### `MeetTheTeam`
+- `<section className="bg-wood-50 py-20 px-6 lg:px-20">`, inner `flex flex-col lg:flex-row items-center gap-12`.
+- Left `lg:w-2/5`: placeholder `w-full max-w-sm aspect-[3/4] bg-wood-200 rounded-2xl flex items-center justify-center mx-auto` → "Team Photo" `text-wood-400`. Below, `mt-4 text-center` logo `text-lg font-bold text-wood-950` with `ASH` in `text-orange`.
+- Right `lg:w-3/5`: eyebrow, h2, subtitle, body copy, and TanStack `<Link to="/about">` styled `mt-6 inline-block text-orange font-semibold hover:text-amber transition` with "Learn More About Us →".
 
-### Section 2 — `Services`
-- `<section className="bg-wood-950 py-20 px-6 lg:px-20">`
-- Centered eyebrow + h2 + paragraph (exact copy/classes from spec).
-- `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12`.
-- Services data array (icon component + title + desc) for the 6 entries listed.
-- Card: `bg-wood-900 border border-wood-800 rounded-xl p-6 hover:border-orange transition-all duration-300`.
-- Icon wrap: `w-12 h-12 rounded-lg bg-orange/10 flex items-center justify-center` with `<Icon className="w-6 h-6 text-orange" />`.
-- Title `mt-4 text-white font-bold text-lg`. Desc `mt-2 text-wood-400 text-sm leading-relaxed`.
+### `FeaturesStats`
+- `<section className="bg-wood-950 py-20 px-6 lg:px-20">`.
+- Eyebrow / h2 / paragraph as spec'd.
+- Features data array of 6 `{ title, desc }`. Grid `mt-10 grid grid-cols-1 md:grid-cols-2 gap-6`. Each item `flex` with `Check` icon in `w-10 h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center flex-shrink-0` and content `ml-4` (title `text-white font-semibold`, desc `text-wood-400 text-sm mt-1`).
+- CTA `mt-8` → "Get Started" linking to `/contact`.
+- Stats row `mt-16 flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center`. 3 stats: `500K+ / Lines of Code Written`, `100% / Happy Customers`, `5/5 / Google Reviews`. Number `text-4xl font-bold text-orange`, label `text-wood-400 text-sm mt-1`.
+
+### `PageSpeed`
+- `<section className="bg-wood-50 py-20 px-6 lg:px-20">`, inner `flex flex-col lg:flex-row items-center gap-12`.
+- Left `lg:w-1/2`: `w-full aspect-video bg-wood-200 rounded-xl border border-wood-200 flex items-center justify-center text-wood-400` → "Speed Test Screenshot".
+- Right `lg:w-1/2`: h2, paragraph, "Schedule a Call" button to `/contact`.
 
 ### Imports
-Add Lucide icons to the existing import: `Monitor`, `Search`, `Smartphone`, `Settings`, `Zap`, `MapPin`. `line-clamp-2` ships with Tailwind v4 by default — no plugin needed.
+Add `Check` to existing Lucide import. Render all three sections in the `Index` component.

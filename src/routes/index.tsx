@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
   MapPin,
@@ -288,6 +289,158 @@ function Services() {
   );
 }
 
+function MeetTheTeam() {
+  return (
+    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+      <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="lg:w-2/5 w-full">
+          <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 rounded-2xl flex items-center justify-center mx-auto">
+            <span className="text-wood-400">Team Photo</span>
+          </div>
+          <p className="mt-4 text-center text-lg font-bold text-wood-950">
+            Designsby<span className="text-orange">ASH</span>
+          </p>
+        </div>
+
+        <div className="lg:w-3/5">
+          <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+            Meet the Team
+          </p>
+          <h2 className="mt-2 text-wood-950 text-3xl font-bold">
+            The People Behind the Pixels
+          </h2>
+          <p className="mt-1 text-wood-500 text-lg">Design &amp; Development</p>
+          <p className="mt-4 text-wood-600 leading-relaxed">
+            We're a team of passionate web designers and developers based in
+            Edmonton, Alberta. We specialize in hand-coded, lightning-fast
+            websites for small businesses across Canada and internationally.
+            Every project gets our full attention — your business deserves a
+            website that works as hard as you do.
+          </p>
+          <Link
+            to="/about"
+            className="mt-6 inline-block text-orange font-semibold hover:text-amber transition"
+          >
+            Learn More About Us →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const features = [
+  {
+    title: "Hosting Fees Included",
+    desc: "One simple monthly payment covers everything.",
+  },
+  {
+    title: "24/7 Customer Service",
+    desc: "Real people who know your business.",
+  },
+  {
+    title: "Unlimited Edits",
+    desc: "Changes within 24 hours, no extra fees.",
+  },
+  {
+    title: "Custom Development & Design",
+    desc: "40–50 hours crafting your perfect site.",
+  },
+  {
+    title: "Ongoing Maintenance",
+    desc: "We track performance and optimize continuously.",
+  },
+  {
+    title: "Better Results",
+    desc: "95+ Google speed scores mean more customers.",
+  },
+];
+
+const stats = [
+  { value: "500K+", label: "Lines of Code Written" },
+  { value: "100%", label: "Happy Customers" },
+  { value: "5/5", label: "Google Reviews" },
+];
+
+function FeaturesStats() {
+  return (
+    <section className="bg-wood-950 py-20 px-6 lg:px-20">
+      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+        What We Provide
+      </p>
+      <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold">
+        Custom Website Design — $0 Down, $175 Per Month
+      </h2>
+      <p className="mt-4 max-w-2xl text-wood-400 text-lg">
+        Launch a professional 5-page website with no upfront costs. No hidden
+        fees. You own 100% of your domain and content. Cancel anytime.
+      </p>
+
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {features.map((f) => (
+          <div key={f.title} className="flex">
+            <div className="w-10 h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center flex-shrink-0">
+              <Check className="w-5 h-5" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-white font-semibold">{f.title}</h3>
+              <p className="text-wood-400 text-sm mt-1">{f.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8">
+        <Link
+          to="/contact"
+          className="inline-block bg-orange text-white px-8 py-3.5 rounded-md font-semibold hover:bg-orange-hover transition"
+        >
+          Get Started
+        </Link>
+      </div>
+
+      <div className="mt-16 flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
+        {stats.map((s) => (
+          <div key={s.label}>
+            <p className="text-4xl font-bold text-orange">{s.value}</p>
+            <p className="text-wood-400 text-sm mt-1">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PageSpeed() {
+  return (
+    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+      <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="lg:w-1/2 w-full">
+          <div className="w-full aspect-video bg-wood-200 rounded-xl border border-wood-200 flex items-center justify-center text-wood-400">
+            Speed Test Screenshot
+          </div>
+        </div>
+        <div className="lg:w-1/2">
+          <h2 className="text-wood-950 text-3xl font-bold">
+            Page Speed Matters — Lightning-Fast Websites That Convert
+          </h2>
+          <p className="mt-4 text-wood-600 leading-relaxed">
+            Our sites achieve perfect 100/100 speed scores. While most sites
+            take 3+ seconds to load, ours load in under a second. Even a
+            1-second delay reduces conversions by 7%.
+          </p>
+          <Link
+            to="/contact"
+            className="mt-6 inline-block bg-orange text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-hover transition"
+          >
+            Schedule a Call
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Index() {
   return (
     <>
@@ -296,6 +449,9 @@ function Index() {
       <YouTubeExplainer />
       <FeaturedWork />
       <Services />
+      <MeetTheTeam />
+      <FeaturesStats />
+      <PageSpeed />
     </>
   );
 }
