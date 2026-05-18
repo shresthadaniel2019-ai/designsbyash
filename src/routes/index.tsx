@@ -1,4 +1,12 @@
+import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  PlayCircle,
+  Star,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,7 +22,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Index() {
+function Hero() {
   return (
     <>
       <section className="bg-wood-950 min-h-[85vh] py-20 px-6 lg:px-20 flex items-center">
@@ -54,6 +62,121 @@ function Index() {
           </span>
         </div>
       </div>
+    </>
+  );
+}
+
+function TestimonialsCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (direction: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const first = el.firstElementChild as HTMLElement | null;
+    const cardWidth = first?.offsetWidth ?? 560;
+    el.scrollBy({ left: direction * (cardWidth + 24), behavior: "smooth" });
+  };
+
+  return (
+    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+      <h2 className="text-wood-950 text-3xl lg:text-4xl font-bold text-center max-w-3xl mx-auto">
+        The Proof Is in the Pudding... Let's Hear From Our Clients
+      </h2>
+
+      <div className="mt-12 relative">
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2"
+        >
+          {Array.from({ length: 7 }).map((_, i) => (
+            <article
+              key={i}
+              className="bg-white rounded-xl shadow-md p-5 snap-start flex-shrink-0 flex flex-col md:flex-row min-w-[90vw] md:min-w-[560px]"
+            >
+              <div className="w-full md:w-[280px] aspect-video bg-wood-900 rounded-lg flex items-center justify-center">
+                <Play className="w-10 h-10 text-wood-500" />
+              </div>
+              <div className="pt-4 pl-0 md:pt-0 md:pl-6 flex-1">
+                <div className="flex gap-1">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <Star key={s} className="w-5 h-5 fill-amber text-amber" />
+                  ))}
+                </div>
+                <p className="mt-3 text-wood-600 italic text-sm">
+                  Client video testimonial coming soon.
+                </p>
+                <p className="mt-3 text-wood-950 font-semibold text-sm">
+                  — Client Name, Business Name
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          aria-label="Previous testimonial"
+          onClick={() => scrollByCard(-1)}
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -left-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next testimonial"
+          onClick={() => scrollByCard(1)}
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -right-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function YouTubeExplainer() {
+  return (
+    <section className="bg-wood-950 py-20 px-6 lg:px-20">
+      <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="lg:w-1/2">
+          <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+            See It In Action
+          </p>
+          <h2 className="mt-3 text-white text-3xl lg:text-4xl font-bold">
+            Watch How We Build Websites That Work
+          </h2>
+          <p className="mt-4 text-wood-400 text-lg leading-relaxed">
+            See the difference a hand-coded website can make for your business.
+            No page builders, no templates — just clean, efficient code built to
+            convert.
+          </p>
+          <Link
+            to="/contact"
+            className="mt-6 inline-block text-orange font-semibold hover:text-amber transition"
+          >
+            Start Today →
+          </Link>
+        </div>
+
+        <div className="lg:w-1/2 w-full">
+          <div className="w-full aspect-video bg-wood-900 rounded-xl border border-wood-800 flex flex-col items-center justify-center">
+            <PlayCircle className="w-16 h-16 text-wood-500" />
+            <span className="mt-3 text-wood-500 text-sm">
+              YouTube Video Coming Soon
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Index() {
+  return (
+    <>
+      <Hero />
+      <TestimonialsCarousel />
+      <YouTubeExplainer />
     </>
   );
 }
