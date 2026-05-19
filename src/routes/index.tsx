@@ -521,11 +521,11 @@ function FinalCTA() {
     <section className="bg-wood-950 py-16 px-6 lg:px-20 text-center relative overflow-hidden">
       <div
         aria-hidden
-        className="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-30"
+        className="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-0"
       />
       <div
         aria-hidden
-        className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-30"
+        className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-0"
       />
       <div className="relative z-10">
         <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
