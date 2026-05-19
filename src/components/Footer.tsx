@@ -54,10 +54,22 @@ export function Footer() {
       </div>
 
       <div className="mt-12 pt-6 border-t border-wood-800 flex flex-col sm:flex-row justify-between gap-2">
-        <span className="text-wood-500 text-sm">© 2025 DesignsbyASH</span>
-        <span className="text-wood-500 text-sm">
-          Privacy Policy | Terms of Service
-        </span>
+        <span className="text-wood-500 text-sm">© 2026 DesignsbyASH</span>
+        <div className="text-wood-500 text-sm flex gap-2">
+          <Link
+            to="/privacy-policy"
+            className="hover:text-orange transition"
+          >
+            Privacy Policy
+          </Link>
+          <span aria-hidden>|</span>
+          <Link
+            to="/terms-of-service"
+            className="hover:text-orange transition"
+          >
+            Terms of Service
+          </Link>
+        </div>
       </div>
     </footer>
   );

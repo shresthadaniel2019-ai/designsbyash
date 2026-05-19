@@ -1,31 +1,38 @@
-## Inner Pages — About, Services, Pricing, Contact
+Note: this project uses TanStack Start file-based routing (`src/routes/`), not `src/pages/` + `App.tsx`. I'll adapt your spec to the existing architecture — same outcome, correct file locations. Navigation + Footer are already provided globally by `src/routes/__root.tsx`, so each page just renders its content.
 
-Rewrite the 4 route files. Extract a tiny shared `PageHero` (eyebrow + h1 + paragraph on `bg-wood-950`) and a `BottomCTA` for About/Services into `src/components/PageBits.tsx` to avoid duplication. Pricing imports the existing `PricingSection`. Contact form is visual-only.
+## 1. Create `src/routes/terms-of-service.tsx`
+- `createFileRoute("/terms-of-service")` with route-specific `head()` meta (title, description, og:title, og:description).
+- Component renders a `<main>` with `bg-wood-50 py-20 px-6 lg:px-20` wrapper and an inner `max-w-3xl mx-auto` article.
+- Semantic HTML, exactly as provided:
+  - `<h1>` "Terms of Service" (text-wood-950 text-4xl font-bold)
+  - Header block: **DesignsbyASH** + "Effective Date: May 1, 2026"
+  - 17 numbered sections rendered as `<h3>` (text-wood-950 text-xl font-bold mt-10 mb-3)
+  - `<p>` paragraphs in `text-wood-600 leading-relaxed`, `<strong>` for bold inline labels
+  - `<ul>` bullet lists where the source uses dashes
+  - Section 17 contact block with email/phone/location
+  - Final acknowledgement paragraph
+- All legal text rendered verbatim — no summarization.
 
-### `src/components/PageBits.tsx` (new)
-- `PageHero({ eyebrow, title, description })`: `bg-wood-950 py-20 px-6 lg:px-20 text-center` with eyebrow / h1 / paragraph using the spec'd tokens.
-- `BottomCTA()`: `bg-wood-950 py-12 text-center` → "Ready to Work Together?" + "Get in Touch" linking to `/contact`.
+## 2. Create `src/routes/privacy-policy.tsx`
+- Same pattern: `createFileRoute("/privacy-policy")` + route-specific `head()` meta.
+- Same wrapper / typography classes as Terms page for consistency.
+- 12 sections rendered as `<h3>`, with `<strong>` sub-labels (e.g. "(a) Information You Provide Directly:") and `<ul>` bullet lists exactly as provided.
+- Final contact block + acknowledgement.
 
-### `src/routes/about.tsx` (rewrite)
-- `<PageHero>` ("About Us" / "The Team Behind DesignsbyASH" / Edmonton tagline).
-- Story section `bg-wood-50 py-16 px-6 lg:px-20` → `flex flex-col lg:flex-row gap-12 items-center`. Left: `max-w-md aspect-square bg-wood-200 rounded-2xl` placeholder. Right: h2 "Our Story", two `text-wood-600 leading-relaxed` paragraphs, then 3 values list using Lucide `Check w-5 h-5 text-orange` + `text-wood-950 font-semibold`.
-- `<BottomCTA />`.
-- Head meta updated to descriptive copy.
+## 3. Update `src/components/Footer.tsx`
+- The footer already shows the literal text "Privacy Policy | Terms of Service" but as plain `<span>`. Replace with two `<Link>`s:
+  - `<Link to="/privacy-policy">Privacy Policy</Link>` ` | ` `<Link to="/terms-of-service">Terms of Service</Link>`
+  - Classes: `text-wood-500 hover:text-orange transition text-sm` to match existing muted footer style.
+- Also update the copyright year span from "© 2025 DesignsbyASH" to "© 2026 DesignsbyASH" to match the effective date context (optional — flag for confirmation if you prefer to keep 2025).
 
-### `src/routes/services.tsx` (rewrite)
-- `<PageHero>` ("Our Services" / "Everything Your Business Needs Online" / tagline).
-- One wrapper `bg-wood-50 py-16 px-6 lg:px-20` containing 3 rows mapped from data. Row: `flex flex-col items-center gap-12 py-12 ${i % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'}`. Text side: title `text-wood-950 text-2xl font-bold`, two `text-wood-600 leading-relaxed` sentences, `Link to="/contact"` "Learn More →" `text-orange font-semibold mt-4 inline-block`. Image side: `w-full lg:w-1/2 aspect-video bg-wood-200 rounded-xl` placeholder.
-- `<BottomCTA />`.
+## Items adapted from your spec
+- **No `src/pages/` or `App.tsx`** — TanStack Start uses `src/routes/`; routes are auto-registered by the Vite plugin, no manual route table edits.
+- **No per-page Navigation/Footer imports** — `__root.tsx` already wraps every route with `<Navbar />` + `<Outlet />` + `<Footer />`. Adding them inside individual pages would render them twice.
+- **ScrollToTop** — TanStack Router scrolls to top on navigation by default; no separate component needed.
+- **Dark mode** — the project uses a fixed wood/orange palette (not a light/dark theme toggle); I'll follow the existing token system (`text-wood-950`, `text-wood-600`, `bg-wood-50`, etc.) used across all other pages. No `ThemeProvider`/`ThemeToggle` exists, so nothing there will be touched.
 
-### `src/routes/pricing.tsx` (rewrite)
-- `<PageHero>` ("Pricing" / "Simple, Transparent Pricing" / tagline).
-- `<PricingSection />`.
-- FAQ section `bg-wood-50 py-16 px-6 lg:px-20` with inner `max-w-3xl mx-auto`. h2 "Common Questions". 4 accordion items in a small client `FAQItem` component: `useState(open)`. Each item: `border-b border-wood-200 py-4`. Button row: `w-full flex justify-between items-center text-left text-wood-950 font-semibold cursor-pointer`. `ChevronDown w-5 h-5 transition-transform ${open ? 'rotate-180' : ''}`. Answer paragraph rendered only when open: `text-wood-600 text-sm mt-2`.
-
-### `src/routes/contact.tsx` (rewrite)
-- `<PageHero>` ("Contact" / "Let's Talk About Your Project" / tagline).
-- Section `bg-wood-50 py-16 px-6 lg:px-20` → `flex flex-col lg:flex-row gap-12`.
-- Left form `lg:w-1/2`. `<form onSubmit={(e) => e.preventDefault()}>` `flex flex-col gap-4`. Each field wrapped in label + input. Inputs/textarea use spec'd classes. Textarea `rows={5}`. Submit button styled per spec.
-- Right `lg:w-1/2`: h3 "Book a Call", paragraph, Calendly placeholder `w-full h-64 bg-wood-100 rounded-xl border-2 border-dashed border-wood-300 flex items-center justify-center text-wood-400`. Then `mt-8` h3 "Contact Info" with 4 lines (`M–F 9am – 5pm MST`, phone, email, address) `text-wood-600 text-sm flex flex-col gap-2`.
-
-All pages keep their `createFileRoute` + `head()` meta with route-specific title/description.
+## Technical details
+- Heading hierarchy: one `<h1>` per page, `<h3>` for numbered sections (matches your `###` markdown).
+- Paragraph spacing: `space-y-4` inside each section, `mt-10` between sections.
+- Lists: `list-disc list-inside text-wood-600 space-y-1` with `<strong>` for the bolded label portions.
+- Contact blocks: `<address className="not-italic">` containing email as `mailto:` link and phone as `tel:` link for a11y.
