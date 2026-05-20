@@ -40,21 +40,21 @@ const faqs = [
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-wood-200 py-4">
+    <div className="border-b border-wood-200 dark:border-wood-700 py-4">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex justify-between items-center text-left text-wood-950 font-semibold cursor-pointer"
+        className="w-full flex justify-between items-center text-left text-wood-950 dark:text-white font-semibold cursor-pointer"
         aria-expanded={open}
       >
         <span>{q}</span>
         <ChevronDown
-          className={`w-5 h-5 text-wood-600 transition-transform ${
+          className={`w-5 h-5 text-wood-600 dark:text-wood-400 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
-      {open && <p className="text-wood-600 text-sm mt-2">{a}</p>}
+      {open && <p className="text-wood-600 dark:text-wood-300 text-sm mt-2">{a}</p>}
     </div>
   );
 }
@@ -70,9 +70,9 @@ function PricingPage() {
 
       <PricingSection />
 
-      <section className="bg-wood-50 py-16 px-6 lg:px-20">
+      <section className="bg-wood-50 dark:bg-wood-900 py-16 px-6 lg:px-20">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-wood-950 text-2xl font-bold mb-8">
+          <h2 className="text-wood-950 dark:text-white text-2xl font-bold mb-8">
             Common Questions
           </h2>
           {faqs.map((f) => (
