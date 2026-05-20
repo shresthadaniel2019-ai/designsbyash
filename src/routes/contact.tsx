@@ -93,18 +93,18 @@ function ContactPage() {
           </div>
 
           <div className="lg:w-1/2">
-            <h3 className="text-wood-950 font-bold text-xl">Book a Call</h3>
-            <p className="text-wood-600 mt-2">
+            <h3 className="text-wood-950 dark:text-white font-bold text-xl">Book a Call</h3>
+            <p className="text-wood-600 dark:text-wood-300 mt-2">
               Calendly integration coming soon.
             </p>
-            <div className="mt-4 w-full h-64 bg-wood-100 rounded-xl border-2 border-dashed border-wood-300 flex items-center justify-center text-wood-400">
+            <div className="mt-4 w-full h-64 bg-wood-100 dark:bg-wood-800 rounded-xl border-2 border-dashed border-wood-300 dark:border-wood-700 flex items-center justify-center text-wood-400">
               Calendly Embed Placeholder
             </div>
 
-            <h3 className="mt-8 text-wood-950 font-bold text-xl">
+            <h3 className="mt-8 text-wood-950 dark:text-white font-bold text-xl">
               Contact Info
             </h3>
-            <div className="mt-4 text-wood-600 text-sm flex flex-col gap-2">
+            <div className="mt-4 text-wood-600 dark:text-wood-300 text-sm flex flex-col gap-2">
               <span>M–F 9am – 5pm MST</span>
               <span>(XXX) XXX-XXXX</span>
               <span>hello@designsbyash.com</span>
