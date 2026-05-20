@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { BottomCTA, PageHero } from "@/components/PageBits";
@@ -57,8 +57,19 @@ const DATA: Record<TabKey, QA[]> = {
   ],
 };
 
-function FAQItem({ q, a, delay }: { q: string; a: string; delay: number }) {
-  const [open, setOpen] = useState(false);
+function FAQItem({
+  q,
+  a,
+  isOpen,
+  onToggle,
+  delay,
+}: {
+  q: string;
+  a: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  delay: number;
+}) {
   const ref = useScrollReveal<HTMLDivElement>();
   return (
     <div
@@ -67,26 +78,26 @@ function FAQItem({ q, a, delay }: { q: string; a: string; delay: number }) {
     >
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="w-full flex items-center justify-between text-left py-5 gap-4"
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <span className="font-semibold text-wood-950 dark:text-white">{q}</span>
         <ChevronDown
           className={`w-5 h-5 flex-shrink-0 text-wood-500 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
+            isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
         <div className="overflow-hidden">
           <p
             className={`pb-5 pr-8 text-wood-600 dark:text-wood-300 leading-relaxed transition-opacity duration-200 ${
-              open ? "opacity-100 delay-100" : "opacity-0"
+              isOpen ? "opacity-100 delay-100" : "opacity-0"
             }`}
           >
             {a}
@@ -99,6 +110,37 @@ function FAQItem({ q, a, delay }: { q: string; a: string; delay: number }) {
 
 function FAQPage() {
   const [tab, setTab] = useState<TabKey>("finances");
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [pill, setPill] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+  const [contentVisible, setContentVisible] = useState(true);
+  const tabRefs = useRef<Record<TabKey, HTMLButtonElement | null>>({
+    finances: null,
+    packages: null,
+    websites: null,
+  });
+
+  useEffect(() => {
+    const update = () => {
+      const el = tabRefs.current[tab];
+      if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [tab]);
+
+  useEffect(() => {
+    setContentVisible(false);
+    const t = window.setTimeout(() => setContentVisible(true), 50);
+    return () => window.clearTimeout(t);
+  }, [tab]);
+
+  const handleTab = (next: TabKey) => {
+    if (next === tab) return;
+    setTab(next);
+    setOpenIdx(null);
+  };
+
   return (
     <>
       <PageHero
@@ -109,16 +151,28 @@ function FAQPage() {
       <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
         <div className="max-w-3xl mx-auto">
           <div className="flex justify-center mb-10">
-            <div className="inline-flex bg-wood-200 dark:bg-wood-800 rounded-full p-1">
+            <div className="relative inline-flex bg-wood-200 dark:bg-wood-800 rounded-full p-1">
+              <span
+                aria-hidden
+                className="absolute top-1 bottom-1 bg-orange rounded-full"
+                style={{
+                  left: pill.left,
+                  width: pill.width,
+                  transition: "all 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              />
               {TABS.map((t) => (
                 <button
                   key={t.key}
+                  ref={(el) => {
+                    tabRefs.current[t.key] = el;
+                  }}
                   type="button"
-                  onClick={() => setTab(t.key)}
-                  className={`px-4 sm:px-6 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
+                  onClick={() => handleTab(t.key)}
+                  className={`relative z-10 px-4 sm:px-6 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
                     tab === t.key
-                      ? "bg-orange text-white"
-                      : "text-wood-500 dark:text-wood-400 hover:text-wood-950 dark:hover:text-white"
+                      ? "text-white"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
                   }`}
                 >
                   {t.label}
@@ -127,9 +181,20 @@ function FAQPage() {
             </div>
           </div>
 
-          <div key={tab} className="flex flex-col">
+          <div
+            key={tab}
+            className="flex flex-col transition-opacity duration-200"
+            style={{ opacity: contentVisible ? 1 : 0 }}
+          >
             {DATA[tab].map((item, i) => (
-              <FAQItem key={item.q} q={item.q} a={item.a} delay={i + 1} />
+              <FAQItem
+                key={item.q}
+                q={item.q}
+                a={item.a}
+                isOpen={openIdx === i}
+                onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+                delay={i + 1}
+              />
             ))}
           </div>
         </div>

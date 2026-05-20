@@ -1,10 +1,11 @@
-import { useState, type ComponentType } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, Rocket, X, Zap } from "lucide-react";
 
 type FeatureKind = "orange" | "amber" | "x";
 type Feature = { kind: FeatureKind; text: string };
 type IconType = ComponentType<{ className?: string }>;
+type Mode = "subscription" | "lump";
 type Card = {
   title: string;
   price: string;
@@ -131,9 +132,36 @@ function PricingCard({ card }: { card: Card }) {
 }
 
 export function PricingSection() {
-  const [mode, setMode] = useState<"subscription" | "lump">("subscription");
+  const [mode, setMode] = useState<Mode>("subscription");
+  const [displayedMode, setDisplayedMode] = useState<Mode>("subscription");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [pill, setPill] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+
+  const subRef = useRef<HTMLButtonElement>(null);
+  const lumpRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const update = () => {
+      const el = mode === "subscription" ? subRef.current : lumpRef.current;
+      if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [mode]);
+
+  const handleSwitch = (next: Mode) => {
+    if (next === mode) return;
+    setMode(next);
+    setIsTransitioning(true);
+    window.setTimeout(() => {
+      setDisplayedMode(next);
+      setIsTransitioning(false);
+    }, 150);
+  };
+
   const cards =
-    mode === "subscription" ? [subStarter, subGrowth] : [lumpStarter, lumpGrowth];
+    displayedMode === "subscription" ? [subStarter, subGrowth] : [lumpStarter, lumpGrowth];
 
   return (
     <section className="bg-wood-950 py-20 px-6 lg:px-20">
@@ -149,29 +177,31 @@ export function PricingSection() {
       </p>
 
       <div className="mt-8 flex justify-center">
-        <div className="relative bg-wood-800 rounded-full p-1 inline-flex w-[280px]">
+        <div className="relative bg-wood-800 rounded-full p-1 inline-flex">
           <span
             aria-hidden
-            className="absolute top-1 bottom-1 left-1 rounded-full bg-orange transition-transform duration-300 ease-out"
+            className="absolute top-1 bottom-1 bg-orange rounded-full"
             style={{
-              width: "calc(50% - 0.25rem)",
-              transform:
-                mode === "lump" ? "translateX(100%)" : "translateX(0)",
+              left: pill.left,
+              width: pill.width,
+              transition: "all 300ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           />
           <button
+            ref={subRef}
             type="button"
-            onClick={() => setMode("subscription")}
-            className={`relative z-10 flex-1 rounded-full py-2 font-semibold transition-colors ${
+            onClick={() => handleSwitch("subscription")}
+            className={`relative z-10 px-6 py-2 rounded-full font-semibold transition-colors ${
               mode === "subscription" ? "text-white" : "text-wood-400"
             }`}
           >
             Subscription
           </button>
           <button
+            ref={lumpRef}
             type="button"
-            onClick={() => setMode("lump")}
-            className={`relative z-10 flex-1 rounded-full py-2 font-semibold transition-colors ${
+            onClick={() => handleSwitch("lump")}
+            className={`relative z-10 px-6 py-2 rounded-full font-semibold transition-colors ${
               mode === "lump" ? "text-white" : "text-wood-400"
             }`}
           >
@@ -181,8 +211,8 @@ export function PricingSection() {
       </div>
 
       <div
-        key={mode}
-        className="mt-10 flex flex-col lg:flex-row gap-8 justify-center max-w-4xl mx-auto animate-fade-in"
+        className="mt-10 flex flex-col lg:flex-row gap-8 justify-center max-w-4xl mx-auto transition-opacity duration-150 ease"
+        style={{ opacity: isTransitioning ? 0 : 1 }}
       >
         {cards.map((card) => (
           <PricingCard key={card.title + card.priceSuffix} card={card} />
