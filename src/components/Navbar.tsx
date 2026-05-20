@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { to: "/", label: "Home" },
@@ -53,7 +54,8 @@ export function Navbar() {
         ))}
       </nav>
 
-      <div className="hidden md:block">
+      <div className="hidden md:flex items-center gap-2">
+        <ThemeToggle />
         <Link
           to="/contact"
           className="bg-orange text-white px-5 py-2.5 rounded-md font-semibold hover:bg-orange-hover transition"
@@ -62,14 +64,18 @@ export function Navbar() {
         </Link>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="md:hidden text-white"
-        aria-label="Open menu"
-      >
-        <Menu className="h-6 w-6" />
-      </button>
+      <div className="md:hidden flex items-center gap-2">
+        <ThemeToggle />
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="text-white"
+          aria-label="Open menu"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      </div>
+
 
       {open && (
         <div className="fixed inset-0 z-50 md:hidden">
