@@ -352,18 +352,18 @@ function PageSpeed() {
   const imgRef = useScrollReveal();
   const textRef = useScrollReveal();
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         <div ref={imgRef} className="lg:w-1/2 w-full reveal">
-          <div className="w-full aspect-video bg-wood-200 rounded-xl border border-wood-200 flex items-center justify-center text-wood-400">
+          <div className="w-full aspect-video bg-wood-200 dark:bg-wood-800 rounded-xl border border-wood-200 dark:border-wood-700 flex items-center justify-center text-wood-400">
             Speed Test Screenshot
           </div>
         </div>
         <div ref={textRef} className="lg:w-1/2 reveal reveal-delay-2">
-          <h2 className="text-wood-950 text-3xl font-bold">
+          <h2 className="text-wood-950 dark:text-white text-3xl font-bold">
             Page Speed Matters — Lightning-Fast Websites That Convert
           </h2>
-          <p className="mt-4 text-wood-600 leading-relaxed">
+          <p className="mt-4 text-wood-600 dark:text-wood-300 leading-relaxed">
             Our sites achieve perfect 100/100 speed scores. While most sites
             take 3+ seconds to load, ours load in under a second. Even a
             1-second delay reduces conversions by 7%.
