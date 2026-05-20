@@ -393,12 +393,12 @@ function VideoTestimonials() {
   };
 
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div ref={headRef} className="reveal text-center">
         <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
           Our Testimonials
         </p>
-        <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold">
+        <h2 className="mt-2 text-wood-950 dark:text-white text-3xl lg:text-4xl font-bold">
           See What Our Clients Have to Say
         </h2>
       </div>
@@ -411,7 +411,7 @@ function VideoTestimonials() {
           {Array.from({ length: 8 }).map((_, i) => (
             <article
               key={i}
-              className="bg-white rounded-xl shadow-md p-5 snap-start flex-shrink-0 min-w-[85vw] md:min-w-[350px] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              className="bg-white dark:bg-wood-800 rounded-xl shadow-md p-5 snap-start flex-shrink-0 min-w-[85vw] md:min-w-[350px] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
               <div className="w-full aspect-video bg-wood-900 rounded-lg flex flex-col items-center justify-center">
                 <PlayCircle className="w-12 h-12 text-wood-500" />
@@ -424,10 +424,10 @@ function VideoTestimonials() {
                   <Star key={s} className="w-5 h-5 fill-amber text-amber" />
                 ))}
               </div>
-              <p className="mt-3 text-wood-600 italic text-sm">
+              <p className="mt-3 text-wood-600 dark:text-wood-300 italic text-sm">
                 "Client video testimonial coming soon."
               </p>
-              <p className="mt-3 text-wood-950 font-semibold text-sm">
+              <p className="mt-3 text-wood-950 dark:text-white font-semibold text-sm">
                 — Client Name, Business Name
               </p>
             </article>
