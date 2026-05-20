@@ -273,8 +273,8 @@ function PrivacyPage() {
           If you have questions, concerns, or requests regarding this Privacy
           Policy or our data practices, please contact us at:
         </P>
-        <address className="not-italic mt-3 text-wood-600 leading-relaxed">
-          <strong className="text-wood-950">DesignsbyASH</strong>
+        <address className="not-italic mt-3 text-wood-600 dark:text-wood-300 leading-relaxed">
+          <strong className="text-wood-950 dark:text-white">DesignsbyASH</strong>
           <br />
           Email:{" "}
           <a
