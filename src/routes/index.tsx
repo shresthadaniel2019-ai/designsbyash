@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PricingSection } from "@/components/PricingSection";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useCountUp } from "@/hooks/useCountUp";
 import {
   Check,
   ChevronLeft,
   ChevronRight,
-  MapPin,
   Monitor,
   Play,
   PlayCircle,
@@ -13,6 +14,7 @@ import {
   Settings,
   Smartphone,
   Star,
+  Users,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -24,7 +26,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Hand-coded, custom websites for Canadian small businesses — no upfront costs, starting at $175/month.",
+          "Hand-coded, custom websites for small businesses — no upfront costs, starting at $175/month.",
       },
     ],
   }),
@@ -32,11 +34,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Hero() {
+  const textRef = useScrollReveal();
+  const mockupRef = useScrollReveal();
   return (
     <>
       <section className="bg-wood-950 min-h-[85vh] py-20 px-6 lg:px-20 flex items-center">
         <div className="w-full flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-3/5">
+          <div ref={textRef} className="lg:w-3/5 reveal">
             <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
               Hand-Coded, Custom Designs
             </p>
@@ -56,98 +60,34 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="lg:w-2/5 flex items-center justify-center mt-12 lg:mt-0 w-full">
-            <div className="w-full max-w-md aspect-[4/3] bg-wood-900 rounded-2xl border border-wood-800 flex items-center justify-center">
-              <span className="text-wood-500 text-sm">Device Mockup Image</span>
+          <div
+            ref={mockupRef}
+            className="lg:w-2/5 flex items-center justify-center mt-12 lg:mt-0 w-full reveal reveal-delay-2"
+          >
+            <div className="w-full max-w-md aspect-[4/3] bg-wood-900 rounded-2xl border border-wood-800 overflow-hidden flex flex-col">
+              <div className="flex items-center gap-1.5 px-4 py-3 bg-wood-800 border-b border-wood-700">
+                <span className="w-3 h-3 rounded-full bg-red-500" />
+                <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                <span className="w-3 h-3 rounded-full bg-green-500" />
+              </div>
+              <div className="flex-1" />
             </div>
           </div>
         </div>
       </section>
 
-      <div className="w-full h-24 bg-wood-50 relative">
-        <div className="w-full h-24 bg-gradient-to-b from-wood-950 to-transparent opacity-20 flex items-center justify-center">
-          <span className="text-wood-400 text-xs">
-            Treeline Divider — replace with SVG
-          </span>
-        </div>
-      </div>
+      <div className="hero-divider" aria-hidden />
     </>
   );
 }
 
-function TestimonialsCarousel() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scrollByCard = (direction: 1 | -1) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const first = el.firstElementChild as HTMLElement | null;
-    const cardWidth = first?.offsetWidth ?? 560;
-    el.scrollBy({ left: direction * (cardWidth + 24), behavior: "smooth" });
-  };
-
-  return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
-      <h2 className="text-wood-950 text-3xl lg:text-4xl font-bold text-center max-w-3xl mx-auto">
-        The Proof Is in the Pudding... Let's Hear From Our Clients
-      </h2>
-
-      <div className="mt-12 relative">
-        <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2"
-        >
-          {Array.from({ length: 7 }).map((_, i) => (
-            <article
-              key={i}
-              className="bg-white rounded-xl shadow-md p-5 snap-start flex-shrink-0 flex flex-col md:flex-row min-w-[90vw] md:min-w-[560px]"
-            >
-              <div className="w-full md:w-[280px] aspect-video bg-wood-900 rounded-lg flex items-center justify-center">
-                <Play className="w-10 h-10 text-wood-500" />
-              </div>
-              <div className="pt-4 pl-0 md:pt-0 md:pl-6 flex-1">
-                <div className="flex gap-1">
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <Star key={s} className="w-5 h-5 fill-amber text-amber" />
-                  ))}
-                </div>
-                <p className="mt-3 text-wood-600 italic text-sm">
-                  Client video testimonial coming soon.
-                </p>
-                <p className="mt-3 text-wood-950 font-semibold text-sm">
-                  — Client Name, Business Name
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          aria-label="Previous testimonial"
-          onClick={() => scrollByCard(-1)}
-          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -left-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          aria-label="Next testimonial"
-          onClick={() => scrollByCard(1)}
-          className="hidden md:flex absolute top-1/2 -translate-y-1/2 -right-4 bg-orange text-white w-10 h-10 rounded-full shadow-lg hover:bg-orange-hover transition items-center justify-center"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-    </section>
-  );
-}
-
 function YouTubeExplainer() {
+  const textRef = useScrollReveal();
+  const videoRef = useScrollReveal();
   return (
     <section className="bg-wood-950 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
-        <div className="lg:w-1/2">
+        <div ref={textRef} className="lg:w-1/2 reveal">
           <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
             See It In Action
           </p>
@@ -167,7 +107,7 @@ function YouTubeExplainer() {
           </Link>
         </div>
 
-        <div className="lg:w-1/2 w-full">
+        <div ref={videoRef} className="lg:w-1/2 w-full reveal reveal-delay-2">
           <div className="w-full aspect-video bg-wood-900 rounded-xl border border-wood-800 flex flex-col items-center justify-center">
             <PlayCircle className="w-16 h-16 text-wood-500" />
             <span className="mt-3 text-wood-500 text-sm">
@@ -175,51 +115,6 @@ function YouTubeExplainer() {
             </span>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-const featuredProjects = [
-  { n: "01", title: "Project Name" },
-  { n: "02", title: "Project Name" },
-  { n: "03", title: "Project Name" },
-] as const;
-
-function FeaturedWork() {
-  return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
-      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
-        Featured Work
-      </p>
-      <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold text-center">
-        Custom Websites Built From Scratch
-      </h2>
-      <p className="mt-4 text-wood-600 text-lg max-w-2xl mx-auto text-center">
-        No templates. No page builders. Just clean, efficient code that delivers
-        blazing-fast websites for small businesses.
-      </p>
-
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {featuredProjects.map((p) => (
-          <article
-            key={p.n}
-            className="relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            <span className="absolute top-4 left-4 z-10 bg-orange text-white font-bold text-sm w-10 h-10 rounded-full flex items-center justify-center">
-              {p.n}
-            </span>
-            <div className="w-full aspect-[4/3] bg-wood-100 flex items-center justify-center text-wood-400 text-sm">
-              Project Screenshot
-            </div>
-            <div className="p-5">
-              <h3 className="text-wood-950 font-bold text-lg">{p.title}</h3>
-              <p className="text-wood-600 text-sm mt-2 line-clamp-2">
-                Custom website for a small business client. Details coming soon.
-              </p>
-            </div>
-          </article>
-        ))}
       </div>
     </section>
   );
@@ -252,49 +147,77 @@ const services: { icon: LucideIcon; title: string; desc: string }[] = [
     desc: "Our sites score 95+ on Google speed tests, bringing more customers to your door.",
   },
   {
-    icon: MapPin,
-    title: "Canadian Crafted",
-    desc: "Our team works right here in Canada. When you need us, we're in your time zone.",
+    icon: Users,
+    title: "Dedicated Partnership",
+    desc: "You work directly with our team — no outsourcing, no runaround. When you reach out, a real person who knows your project responds.",
   },
 ];
 
 function Services() {
+  const headRef = useScrollReveal();
   return (
     <section className="bg-wood-950 py-20 px-6 lg:px-20">
-      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
-        What We Offer
-      </p>
-      <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold text-center">
-        We Handle Your Website So You Can Handle Business
-      </h2>
-      <p className="mt-4 text-wood-400 text-lg max-w-2xl mx-auto text-center">
-        At DesignsbyASH, we handcraft superior websites for small business owners
-        across Canada and beyond.
-      </p>
+      <div ref={headRef} className="reveal">
+        <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
+          What We Offer
+        </p>
+        <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold text-center">
+          We Handle Your Website So You Can Handle Business
+        </h2>
+        <p className="mt-4 text-wood-400 text-lg max-w-2xl mx-auto text-center">
+          At DesignsbyASH, we handcraft superior websites for small business
+          owners who demand performance, quality, and results.
+        </p>
+      </div>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map(({ icon: Icon, title, desc }) => (
-          <article
+        {services.map(({ icon: Icon, title, desc }, i) => (
+          <ServiceCard
             key={title}
-            className="bg-wood-900 border border-wood-800 rounded-xl p-6 hover:border-orange transition-all duration-300"
-          >
-            <div className="w-12 h-12 rounded-lg bg-orange/10 flex items-center justify-center">
-              <Icon className="w-6 h-6 text-orange" />
-            </div>
-            <h3 className="mt-4 text-white font-bold text-lg">{title}</h3>
-            <p className="mt-2 text-wood-400 text-sm leading-relaxed">{desc}</p>
-          </article>
+            Icon={Icon}
+            title={title}
+            desc={desc}
+            delay={(i % 3) + 1}
+          />
         ))}
       </div>
     </section>
   );
 }
 
+function ServiceCard({
+  Icon,
+  title,
+  desc,
+  delay,
+}: {
+  Icon: LucideIcon;
+  title: string;
+  desc: string;
+  delay: number;
+}) {
+  const ref = useScrollReveal();
+  return (
+    <article
+      ref={ref}
+      className={`reveal reveal-delay-${delay} bg-wood-900 border border-wood-800 rounded-xl p-6 hover:border-orange hover:-translate-y-2 hover:shadow-2xl transition-all duration-300`}
+    >
+      <div className="w-12 h-12 rounded-lg bg-orange/10 flex items-center justify-center">
+        <Icon className="w-6 h-6 text-orange" />
+      </div>
+      <h3 className="mt-4 text-white font-bold text-lg">{title}</h3>
+      <p className="mt-2 text-wood-400 text-sm leading-relaxed">{desc}</p>
+    </article>
+  );
+}
+
 function MeetTheTeam() {
+  const photoRef = useScrollReveal();
+  const textRef = useScrollReveal();
   return (
     <section className="bg-wood-50 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
-        <div className="lg:w-2/5 w-full">
+        <div ref={photoRef} className="lg:w-2/5 w-full reveal">
           <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 rounded-2xl flex items-center justify-center mx-auto">
             <span className="text-wood-400">Team Photo</span>
           </div>
@@ -303,7 +226,7 @@ function MeetTheTeam() {
           </p>
         </div>
 
-        <div className="lg:w-3/5">
+        <div ref={textRef} className="lg:w-3/5 reveal reveal-delay-2">
           <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
             Meet the Team
           </p>
@@ -312,11 +235,10 @@ function MeetTheTeam() {
           </h2>
           <p className="mt-1 text-wood-500 text-lg">Design &amp; Development</p>
           <p className="mt-4 text-wood-600 leading-relaxed">
-            We're a team of passionate web designers and developers based in
-            Edmonton, Alberta. We specialize in hand-coded, lightning-fast
-            websites for small businesses across Canada and internationally.
-            Every project gets our full attention — your business deserves a
-            website that works as hard as you do.
+            We're a team of dedicated web designers and developers who
+            specialize in hand-coded, lightning-fast websites for small
+            businesses. Every project gets our full attention — your business
+            deserves a website that works as hard as you do.
           </p>
           <Link
             to="/about"
@@ -331,30 +253,12 @@ function MeetTheTeam() {
 }
 
 const features = [
-  {
-    title: "Hosting Fees Included",
-    desc: "One simple monthly payment covers everything.",
-  },
-  {
-    title: "24/7 Customer Service",
-    desc: "Real people who know your business.",
-  },
-  {
-    title: "Unlimited Edits",
-    desc: "Changes within 24 hours, no extra fees.",
-  },
-  {
-    title: "Custom Development & Design",
-    desc: "40–50 hours crafting your perfect site.",
-  },
-  {
-    title: "Ongoing Maintenance",
-    desc: "We track performance and optimize continuously.",
-  },
-  {
-    title: "Better Results",
-    desc: "95+ Google speed scores mean more customers.",
-  },
+  { title: "Hosting Fees Included", desc: "One simple monthly payment covers everything." },
+  { title: "24/7 Customer Service", desc: "Real people who know your business." },
+  { title: "Unlimited Edits", desc: "Changes within 24 hours, no extra fees." },
+  { title: "Custom Development & Design", desc: "40–50 hours crafting your perfect site." },
+  { title: "Ongoing Maintenance", desc: "We track performance and optimize continuously." },
+  { title: "Better Results", desc: "95+ Google speed scores mean more customers." },
 ];
 
 const stats = [
@@ -363,31 +267,63 @@ const stats = [
   { value: "5/5", label: "Google Reviews" },
 ];
 
+function StatItem({ value, label }: { value: string; label: string }) {
+  const { ref, display } = useCountUp<HTMLParagraphElement>(value);
+  return (
+    <div>
+      <p ref={ref} className="text-4xl font-bold text-orange">
+        {display}
+      </p>
+      <p className="text-wood-400 text-sm mt-1">{label}</p>
+    </div>
+  );
+}
+
+function FeatureItem({
+  title,
+  desc,
+  delay,
+}: {
+  title: string;
+  desc: string;
+  delay: number;
+}) {
+  const ref = useScrollReveal();
+  return (
+    <div ref={ref} className={`reveal reveal-delay-${delay} flex`}>
+      <div className="w-10 h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center flex-shrink-0">
+        <Check className="w-5 h-5" />
+      </div>
+      <div className="ml-4">
+        <h3 className="text-white font-semibold">{title}</h3>
+        <p className="text-wood-400 text-sm mt-1">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function FeaturesStats() {
+  const headRef = useScrollReveal();
+  const statsRef = useScrollReveal();
   return (
     <section className="bg-wood-950 py-20 px-6 lg:px-20">
-      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
-        What We Provide
-      </p>
-      <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold">
-        Custom Website Design — $0 Down, $175 Per Month
-      </h2>
-      <p className="mt-4 max-w-2xl text-wood-400 text-lg">
-        Launch a professional 5-page website with no upfront costs. No hidden
-        fees. You own 100% of your domain and content. Cancel anytime.
-      </p>
+      <div ref={headRef} className="reveal">
+        <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+          What We Provide
+        </p>
+        <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold">
+          Custom Website Design — $0 Down, $175 Per Month
+        </h2>
+        <p className="mt-4 max-w-2xl text-wood-400 text-lg">
+          Launch a professional 5-page website with no upfront costs. No hidden
+          fees. You own 100% of your domain and content. Cancel anytime after
+          your initial term.
+        </p>
+      </div>
 
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {features.map((f) => (
-          <div key={f.title} className="flex">
-            <div className="w-10 h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center flex-shrink-0">
-              <Check className="w-5 h-5" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-white font-semibold">{f.title}</h3>
-              <p className="text-wood-400 text-sm mt-1">{f.desc}</p>
-            </div>
-          </div>
+        {features.map((f, i) => (
+          <FeatureItem key={f.title} {...f} delay={(i % 3) + 1} />
         ))}
       </div>
 
@@ -400,12 +336,12 @@ function FeaturesStats() {
         </Link>
       </div>
 
-      <div className="mt-16 flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
+      <div
+        ref={statsRef}
+        className="reveal mt-16 flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center"
+      >
         {stats.map((s) => (
-          <div key={s.label}>
-            <p className="text-4xl font-bold text-orange">{s.value}</p>
-            <p className="text-wood-400 text-sm mt-1">{s.label}</p>
-          </div>
+          <StatItem key={s.label} value={s.value} label={s.label} />
         ))}
       </div>
     </section>
@@ -413,15 +349,17 @@ function FeaturesStats() {
 }
 
 function PageSpeed() {
+  const imgRef = useScrollReveal();
+  const textRef = useScrollReveal();
   return (
     <section className="bg-wood-50 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
-        <div className="lg:w-1/2 w-full">
+        <div ref={imgRef} className="lg:w-1/2 w-full reveal">
           <div className="w-full aspect-video bg-wood-200 rounded-xl border border-wood-200 flex items-center justify-center text-wood-400">
             Speed Test Screenshot
           </div>
         </div>
-        <div className="lg:w-1/2">
+        <div ref={textRef} className="lg:w-1/2 reveal reveal-delay-2">
           <h2 className="text-wood-950 text-3xl font-bold">
             Page Speed Matters — Lightning-Fast Websites That Convert
           </h2>
@@ -442,55 +380,56 @@ function PageSpeed() {
   );
 }
 
-function WrittenTestimonials() {
+function VideoTestimonials() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const headRef = useScrollReveal();
 
   const scrollByCard = (direction: 1 | -1) => {
     const el = scrollRef.current;
     if (!el) return;
     const first = el.firstElementChild as HTMLElement | null;
-    const cardWidth = first?.offsetWidth ?? 380;
+    const cardWidth = first?.offsetWidth ?? 350;
     el.scrollBy({ left: direction * (cardWidth + 24), behavior: "smooth" });
   };
 
   return (
     <section className="bg-wood-50 py-20 px-6 lg:px-20">
-      <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
-        Our Testimonials
-      </p>
-      <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold text-center">
-        Trusted Web Designer Across Canada and Beyond
-      </h2>
+      <div ref={headRef} className="reveal text-center">
+        <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
+          Our Testimonials
+        </p>
+        <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold">
+          See What Our Clients Have to Say
+        </h2>
+      </div>
 
       <div className="mt-12 relative">
         <div
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2"
         >
-          {Array.from({ length: 10 }).map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <article
               key={i}
-              className="bg-white rounded-xl p-8 shadow-md snap-start flex-shrink-0 min-w-[85vw] md:min-w-[380px]"
+              className="bg-white rounded-xl shadow-md p-5 snap-start flex-shrink-0 min-w-[85vw] md:min-w-[350px] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
-              <div className="w-14 h-14 rounded-full bg-wood-200 flex items-center justify-center text-wood-500 font-bold text-lg">
-                CN
+              <div className="w-full aspect-video bg-wood-900 rounded-lg flex flex-col items-center justify-center">
+                <PlayCircle className="w-12 h-12 text-wood-500" />
+                <span className="mt-2 text-wood-500 text-xs">
+                  Video testimonial coming soon
+                </span>
               </div>
-              <p className="mt-4 text-wood-600 italic leading-relaxed">
-                Placeholder testimonial. This will be replaced with a real
-                client review when available.
-              </p>
-              <p className="mt-4 text-wood-950 font-bold text-sm">
-                Client Name
-              </p>
-              <p className="text-wood-500 text-sm">Owner, Business Name</p>
-              <div className="mt-2 flex items-center gap-2">
-                <span className="text-wood-950 font-bold text-sm">5.0</span>
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <Star key={s} className="w-4 h-4 fill-amber text-amber" />
-                  ))}
-                </div>
+              <div className="mt-4 flex gap-1">
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <Star key={s} className="w-5 h-5 fill-amber text-amber" />
+                ))}
               </div>
+              <p className="mt-3 text-wood-600 italic text-sm">
+                "Client video testimonial coming soon."
+              </p>
+              <p className="mt-3 text-wood-950 font-semibold text-sm">
+                — Client Name, Business Name
+              </p>
             </article>
           ))}
         </div>
@@ -516,7 +455,31 @@ function WrittenTestimonials() {
   );
 }
 
+function MidScrollCTA() {
+  const ref = useScrollReveal();
+  return (
+    <section className="bg-wood-950 py-20 px-6 lg:px-20">
+      <div ref={ref} className="reveal max-w-2xl mx-auto text-center">
+        <h2 className="text-white text-3xl lg:text-4xl font-bold">
+          Convinced Yet?
+        </h2>
+        <p className="mt-4 text-wood-400 text-lg leading-relaxed">
+          Why not hop on a call and hear it from us? No pressure, no pitch —
+          just a conversation about what we can do for your business.
+        </p>
+        <Link
+          to="/contact"
+          className="mt-8 inline-block bg-orange text-white px-8 py-4 rounded-md text-lg font-semibold hover:bg-orange-hover hover:scale-105 transition-all duration-300"
+        >
+          Let's Talk
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
+  const ref = useScrollReveal();
   return (
     <section className="bg-wood-950 py-16 px-6 lg:px-20 text-center relative overflow-hidden">
       <div
@@ -527,7 +490,7 @@ function FinalCTA() {
         aria-hidden
         className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 w-36 h-48 bg-wood-900 rounded-xl opacity-0"
       />
-      <div className="relative z-10">
+      <div ref={ref} className="reveal relative z-10">
         <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
           Reach Out Today
         </p>
@@ -549,16 +512,20 @@ function Index() {
   return (
     <>
       <Hero />
-      <TestimonialsCarousel />
       <YouTubeExplainer />
-      <FeaturedWork />
       <Services />
       <MeetTheTeam />
       <FeaturesStats />
       <PageSpeed />
       <PricingSection />
-      <WrittenTestimonials />
+      <VideoTestimonials />
+      <MidScrollCTA />
       <FinalCTA />
     </>
   );
+}
+
+{
+  // Keep `Play` import referenced in case future use; silence unused
+  void Play;
 }
