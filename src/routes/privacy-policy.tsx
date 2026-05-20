@@ -24,17 +24,17 @@ export const Route = createFileRoute("/privacy-policy")({
 
 function H3({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-wood-950 text-xl font-bold mt-10 mb-3">{children}</h3>
+    <h3 className="text-wood-950 dark:text-white text-xl font-bold mt-10 mb-3">{children}</h3>
   );
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-wood-600 leading-relaxed mt-3">{children}</p>;
+  return <p className="text-wood-600 dark:text-wood-300 leading-relaxed mt-3">{children}</p>;
 }
 
 function UL({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="list-disc list-inside text-wood-600 space-y-1 mt-3">
+    <ul className="list-disc list-inside text-wood-600 dark:text-wood-300 space-y-1 mt-3">
       {children}
     </ul>
   );
@@ -42,11 +42,11 @@ function UL({ children }: { children: React.ReactNode }) {
 
 function PrivacyPage() {
   return (
-    <main className="bg-wood-50 py-20 px-6 lg:px-20">
+    <main className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <article className="max-w-3xl mx-auto">
-        <h1 className="text-wood-950 text-4xl font-bold">Privacy Policy</h1>
-        <p className="mt-4 text-wood-950 font-semibold">DesignsbyASH</p>
-        <p className="text-wood-600">Effective Date: May 1, 2026</p>
+        <h1 className="text-wood-950 dark:text-white text-4xl font-bold">Privacy Policy</h1>
+        <p className="mt-4 text-wood-950 dark:text-white font-semibold">DesignsbyASH</p>
+        <p className="text-wood-600 dark:text-wood-300">Effective Date: May 1, 2026</p>
 
         <H3>1. Introduction</H3>
         <P>
@@ -273,8 +273,8 @@ function PrivacyPage() {
           If you have questions, concerns, or requests regarding this Privacy
           Policy or our data practices, please contact us at:
         </P>
-        <address className="not-italic mt-3 text-wood-600 leading-relaxed">
-          <strong className="text-wood-950">DesignsbyASH</strong>
+        <address className="not-italic mt-3 text-wood-600 dark:text-wood-300 leading-relaxed">
+          <strong className="text-wood-950 dark:text-white">DesignsbyASH</strong>
           <br />
           Email:{" "}
           <a

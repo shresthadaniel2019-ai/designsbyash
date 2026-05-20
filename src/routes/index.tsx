@@ -215,13 +215,13 @@ function MeetTheTeam() {
   const photoRef = useScrollReveal();
   const textRef = useScrollReveal();
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         <div ref={photoRef} className="lg:w-2/5 w-full reveal">
-          <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 rounded-2xl flex items-center justify-center mx-auto">
+          <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 dark:bg-wood-800 rounded-2xl flex items-center justify-center mx-auto">
             <span className="text-wood-400">Team Photo</span>
           </div>
-          <p className="mt-4 text-center text-lg font-bold text-wood-950">
+          <p className="mt-4 text-center text-lg font-bold text-wood-950 dark:text-white">
             Designsby<span className="text-orange">ASH</span>
           </p>
         </div>
@@ -230,11 +230,11 @@ function MeetTheTeam() {
           <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
             Meet the Team
           </p>
-          <h2 className="mt-2 text-wood-950 text-3xl font-bold">
+          <h2 className="mt-2 text-wood-950 dark:text-white text-3xl font-bold">
             The People Behind the Pixels
           </h2>
-          <p className="mt-1 text-wood-500 text-lg">Design &amp; Development</p>
-          <p className="mt-4 text-wood-600 leading-relaxed">
+          <p className="mt-1 text-wood-500 dark:text-wood-400 text-lg">Design &amp; Development</p>
+          <p className="mt-4 text-wood-600 dark:text-wood-300 leading-relaxed">
             We're a team of dedicated web designers and developers who
             specialize in hand-coded, lightning-fast websites for small
             businesses. Every project gets our full attention — your business
@@ -352,18 +352,18 @@ function PageSpeed() {
   const imgRef = useScrollReveal();
   const textRef = useScrollReveal();
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         <div ref={imgRef} className="lg:w-1/2 w-full reveal">
-          <div className="w-full aspect-video bg-wood-200 rounded-xl border border-wood-200 flex items-center justify-center text-wood-400">
+          <div className="w-full aspect-video bg-wood-200 dark:bg-wood-800 rounded-xl border border-wood-200 dark:border-wood-700 flex items-center justify-center text-wood-400">
             Speed Test Screenshot
           </div>
         </div>
         <div ref={textRef} className="lg:w-1/2 reveal reveal-delay-2">
-          <h2 className="text-wood-950 text-3xl font-bold">
+          <h2 className="text-wood-950 dark:text-white text-3xl font-bold">
             Page Speed Matters — Lightning-Fast Websites That Convert
           </h2>
-          <p className="mt-4 text-wood-600 leading-relaxed">
+          <p className="mt-4 text-wood-600 dark:text-wood-300 leading-relaxed">
             Our sites achieve perfect 100/100 speed scores. While most sites
             take 3+ seconds to load, ours load in under a second. Even a
             1-second delay reduces conversions by 7%.
@@ -393,12 +393,12 @@ function VideoTestimonials() {
   };
 
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div ref={headRef} className="reveal text-center">
         <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
           Our Testimonials
         </p>
-        <h2 className="mt-2 text-wood-950 text-3xl lg:text-4xl font-bold">
+        <h2 className="mt-2 text-wood-950 dark:text-white text-3xl lg:text-4xl font-bold">
           See What Our Clients Have to Say
         </h2>
       </div>
@@ -411,7 +411,7 @@ function VideoTestimonials() {
           {Array.from({ length: 8 }).map((_, i) => (
             <article
               key={i}
-              className="bg-white rounded-xl shadow-md p-5 snap-start flex-shrink-0 min-w-[85vw] md:min-w-[350px] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              className="bg-white dark:bg-wood-800 rounded-xl shadow-md p-5 snap-start flex-shrink-0 min-w-[85vw] md:min-w-[350px] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
               <div className="w-full aspect-video bg-wood-900 rounded-lg flex flex-col items-center justify-center">
                 <PlayCircle className="w-12 h-12 text-wood-500" />
@@ -424,10 +424,10 @@ function VideoTestimonials() {
                   <Star key={s} className="w-5 h-5 fill-amber text-amber" />
                 ))}
               </div>
-              <p className="mt-3 text-wood-600 italic text-sm">
+              <p className="mt-3 text-wood-600 dark:text-wood-300 italic text-sm">
                 "Client video testimonial coming soon."
               </p>
-              <p className="mt-3 text-wood-950 font-semibold text-sm">
+              <p className="mt-3 text-wood-950 dark:text-white font-semibold text-sm">
                 — Client Name, Business Name
               </p>
             </article>

@@ -1,75 +1,45 @@
-# Homepage Rewrite Plan
+## Plan: Fix dark/light mode and hero divider
 
-## 1. New scroll-reveal utility
+### 1. `src/styles.css`
+- Remove the global dark-mode overrides that force `bg-wood-950`, `bg-wood-50`, `bg-white`, and `text-wood-*` colors to invert. They cause "always-dark" sections to flip and override `dark:` variants.
+  - Drop: `.dark .bg-white`, `.dark .bg-wood-50`, `.dark .bg-wood-100`, `.dark .bg-wood-200`, `.dark .text-wood-950/900/800/700/600`, `.dark .border-wood-100/200/300`, `.dark input/textarea/select`.
+- Keep the `:root` and `.dark` semantic token overrides (`--color-background`, `--color-foreground`, etc.) so shadcn components still themed.
+- Rewrite `.hero-divider`: simple gradient fade instead of clip-path.
+  ```css
+  .hero-divider {
+    position: relative;
+    z-index: 1;
+    height: 60px;
+    margin-top: -1px;
+    background: linear-gradient(to bottom, #09090b 0%, transparent 100%);
+    pointer-events: none;
+  }
+  ```
 
-**Create `src/hooks/useScrollReveal.ts`**
-- Custom hook returning a ref
-- Uses `IntersectionObserver` (threshold 0.15, rootMargin "0px 0px -50px 0px")
-- Adds `visible` class on intersect, disconnects after first reveal
-- SSR-safe (guard `typeof window`)
+### 2. `src/routes/index.tsx`
+Apply explicit Tailwind classes per the spec:
 
-**Edit `src/styles.css`** — append:
-```css
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 600ms ease-out, transform 600ms ease-out; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 100ms; }
-.reveal-delay-2 { transition-delay: 200ms; }
-.reveal-delay-3 { transition-delay: 300ms; }
-.reveal-delay-4 { transition-delay: 400ms; }
-.reveal-delay-5 { transition-delay: 500ms; }
+- **Hero**: `bg-wood-950` (no dark variant). Already correct — verify text classes use literal `text-white` / `text-wood-400` (these no longer get inverted after step 1).
+- **YouTubeExplainer, Services, FeaturesStats, MidScrollCTA, FinalCTA**: keep `bg-wood-950` only, text stays `text-white` / `text-wood-400`.
+- **MeetTheTeam**, **PageSpeed**, **VideoTestimonials**: change section background to `bg-wood-50 dark:bg-wood-900`.
+  - Headings: `text-wood-950 dark:text-white`
+  - Body paragraphs: `text-wood-600 dark:text-wood-300`
+  - Sub-labels (`text-wood-500`, `text-wood-400` placeholders): add `dark:text-wood-400`
+  - Inner cards in VideoTestimonials: `bg-white dark:bg-wood-800`
+  - Photo / screenshot placeholders: `bg-wood-200 dark:bg-wood-800`
+- Hero JSX: remove the old `<div className="hero-divider" />` if it sits inside the Hero fragment with weird wrapping — keep it placed immediately after `</section>` with no margin, so the gradient blends seamlessly.
 
-.hero-divider {
-  height: 80px;
-  background: var(--color-wood-950);
-  clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);
-}
-```
+### 3. `src/components/Navbar.tsx`
+Already uses `bg-wood-950` + `text-white` literally. After step 1 removes the inversion overrides, navbar stays dark in both modes automatically. No change needed beyond verifying.
 
-**Create `src/hooks/useCountUp.ts`** — animates a number from 0 to target over ~1s once revealed. Handles non-numeric values (`5/5`, `100%`, `500K+`) by parsing the leading number and re-appending the suffix.
+### 4. `src/components/Footer.tsx`
+Verify it uses `bg-wood-950` with literal white/light text classes. If it relies on `text-wood-600` for body text expecting dark-mode inversion, swap to `text-wood-400` so it stays readable on the dark background in both modes. (Will read the file during implementation and adjust only if needed.)
 
-## 2. Rewrite `src/routes/index.tsx`
+### 5. Other routes (about, contact, services, pricing, privacy, terms)
+These routes previously depended on the global `.dark .bg-wood-50` / `.dark .text-wood-950` overrides for dark mode. After removing those overrides, they will appear light in dark mode. Add `dark:` variants to their section backgrounds and text colors so they continue to respond to the toggle:
+- Section bg: `bg-wood-50` → `bg-wood-50 dark:bg-wood-900`, `bg-white` → `bg-white dark:bg-wood-800`
+- Headings/body text: add matching `dark:text-white` / `dark:text-wood-300`
+- Form inputs: `dark:bg-wood-800 dark:border-wood-700 dark:text-white`
 
-Sections in order, all with `.reveal` on key blocks:
-
-1. **Hero** — keep copy. Replace mockup placeholder text with a fake browser window frame (top bar w/ 3 red/yellow/green dots, empty body). Replace treeline divider div with `<div className="hero-divider dark:hero-divider" />`. Apply reveal to headline/sub/CTA and mockup.
-
-2. **YouTubeExplainer** — same copy, dark mode classes, reveal on text + video; "Start Today →" gets `hover:text-emerald-400` (use existing `hover:text-amber` token which is now emerald-light).
-
-3. **Services** — 6 cards, last card replaced:
-   - Icon: `Users` (lucide)
-   - Title: "Dedicated Partnership"
-   - Desc: "You work directly with our team — no outsourcing, no runaround. When you reach out, a real person who knows your project responds."
-   - Update section description to remove "across Canada and beyond" → "who demand performance, quality, and results."
-   - Cards: add `hover:-translate-y-2 hover:shadow-2xl hover:border-orange transition-all duration-300`
-   - Stagger reveal across cards (delay-1..delay-5 cycling)
-
-4. **MeetTheTeam** — drop Edmonton/Alberta wording. New paragraph as specified. Reveal on text + photo.
-
-5. **FeaturesStats** — update description to spec. Reveal staggered features. Stats use `useCountUp` triggered on reveal.
-
-6. **PageSpeed** — reveal both columns. Dark mode classes verified.
-
-7. **PricingSection** — render existing component as-is.
-
-8. **VideoTestimonials (NEW)** — horizontally scrollable row of 8 cards with snap, Play icon, 5 stars (amber/emerald), placeholder quote, chevron buttons (emerald, hidden on mobile), card hover `-translate-y-1 + shadow-lg`. Min-width 350px desktop / 85vw mobile.
-
-9. **MidScrollCTA (NEW)** — `bg-wood-950` section, centered heading "Convinced Yet?", subtext as specified, emerald "Let's Talk" button linking to `/contact` with `hover:scale-105` glow.
-
-10. **FinalCTA** — keep, add reveal.
-
-**Removed:** TestimonialsCarousel, FeaturedWork, WrittenTestimonials (delete all code, unused imports/icons).
-
-**Meta title:** "DesignsbyASH — Small Business Website Design That Delivers"
-
-## 3. Dark mode
-
-Light sections continue to use `bg-wood-50` and existing `.dark .bg-wood-50` override (→ `#18181b`) in styles.css handles the swap. Dark sections (`bg-wood-950`) remain dark. No per-section `dark:` variants required — overrides already in `styles.css` flip backgrounds/text/borders globally.
-
-## Files touched
-
-- `src/hooks/useScrollReveal.ts` (new)
-- `src/hooks/useCountUp.ts` (new)
-- `src/styles.css` (append reveal + divider rules)
-- `src/routes/index.tsx` (full rewrite)
-
-No changes to `PricingSection`, `Navbar`, `Footer`, `ThemeProvider`, route tree, or other routes.
+### Verification
+- Toggle theme in preview, confirm: hero/navbar/footer/always-dark sections stay dark; MeetTheTeam/PageSpeed/VideoTestimonials swap between `wood-50` and `wood-900`; divider blends without a visible triangle; other routes still respond to dark mode.

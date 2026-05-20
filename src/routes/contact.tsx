@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 const inputClass =
-  "bg-white border border-wood-200 rounded-md px-4 py-3 w-full text-wood-950 placeholder:text-wood-400 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition";
+  "bg-white dark:bg-wood-800 border border-wood-200 dark:border-wood-700 rounded-md px-4 py-3 w-full text-wood-950 dark:text-white placeholder:text-wood-400 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition";
 
 function Field({
   label,
@@ -27,7 +27,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-wood-950 font-semibold text-sm mb-1">
+      <span className="block text-wood-950 dark:text-white font-semibold text-sm mb-1">
         {label}
       </span>
       {children}
@@ -44,7 +44,7 @@ function ContactPage() {
         description="Reach out and we'll get back to you within 24 hours."
       />
 
-      <section className="bg-wood-50 py-16 px-6 lg:px-20">
+      <section className="bg-wood-50 dark:bg-wood-900 py-16 px-6 lg:px-20">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-1/2">
             <form
@@ -93,18 +93,18 @@ function ContactPage() {
           </div>
 
           <div className="lg:w-1/2">
-            <h3 className="text-wood-950 font-bold text-xl">Book a Call</h3>
-            <p className="text-wood-600 mt-2">
+            <h3 className="text-wood-950 dark:text-white font-bold text-xl">Book a Call</h3>
+            <p className="text-wood-600 dark:text-wood-300 mt-2">
               Calendly integration coming soon.
             </p>
-            <div className="mt-4 w-full h-64 bg-wood-100 rounded-xl border-2 border-dashed border-wood-300 flex items-center justify-center text-wood-400">
+            <div className="mt-4 w-full h-64 bg-wood-100 dark:bg-wood-800 rounded-xl border-2 border-dashed border-wood-300 dark:border-wood-700 flex items-center justify-center text-wood-400">
               Calendly Embed Placeholder
             </div>
 
-            <h3 className="mt-8 text-wood-950 font-bold text-xl">
+            <h3 className="mt-8 text-wood-950 dark:text-white font-bold text-xl">
               Contact Info
             </h3>
-            <div className="mt-4 text-wood-600 text-sm flex flex-col gap-2">
+            <div className="mt-4 text-wood-600 dark:text-wood-300 text-sm flex flex-col gap-2">
               <span>M–F 9am – 5pm MST</span>
               <span>(XXX) XXX-XXXX</span>
               <span>hello@designsbyash.com</span>
