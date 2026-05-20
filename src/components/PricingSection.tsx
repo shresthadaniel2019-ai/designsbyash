@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, Rocket, X } from "lucide-react";
+import { Check, Rocket, X, Zap } from "lucide-react";
 
 type FeatureKind = "orange" | "amber" | "x";
 type Feature = { kind: FeatureKind; text: string };
+type IconType = ComponentType<{ className?: string }>;
 type Card = {
   title: string;
   price: string;
   priceSuffix: string;
   features: Feature[];
   cta: string;
+  icon: IconType;
   recommended?: boolean;
 };
 
@@ -18,11 +20,11 @@ const subStarter: Card = {
   price: "$175",
   priceSuffix: " /month",
   cta: "Start Building Today",
+  icon: Zap,
   features: [
     { kind: "orange", text: "40+ Hours of Design & Development" },
     { kind: "orange", text: "Includes Hosting" },
     { kind: "orange", text: "Up to 5 Pages" },
-    { kind: "orange", text: "+$250 To Add A Blog" },
     { kind: "orange", text: "Unlimited Edits" },
     { kind: "orange", text: "24/7 Support" },
     { kind: "orange", text: "$100/page after 5" },
@@ -36,6 +38,7 @@ const subGrowth: Card = {
   priceSuffix: " /month",
   cta: "Start Growing Today",
   recommended: true,
+  icon: Rocket,
   features: [
     { kind: "orange", text: "40+ Hours of Design & Development" },
     { kind: "orange", text: "Includes Hosting" },
@@ -53,12 +56,12 @@ const lumpStarter: Card = {
   price: "$3,800",
   priceSuffix: " Lump Sum",
   cta: "Start Building Today",
+  icon: Zap,
   features: [
     { kind: "orange", text: "Design & Development" },
     { kind: "orange", text: "$10/mo Hosting" },
     { kind: "orange", text: "Up to 5 Pages" },
     { kind: "orange", text: "$100/page after 5" },
-    { kind: "orange", text: "+$250 To Add A Blog" },
     { kind: "amber", text: "+$50/mo Unlimited Edits" },
     { kind: "x", text: "24/7 Support" },
     { kind: "x", text: "Lifetime Updates" },
@@ -71,12 +74,13 @@ const lumpGrowth: Card = {
   priceSuffix: " Lump Sum",
   cta: "Start Growing Today",
   recommended: true,
+  icon: Rocket,
   features: [
     { kind: "orange", text: "Design & Development" },
     { kind: "orange", text: "$10/mo Hosting" },
     { kind: "orange", text: "Up to 10 Pages" },
     { kind: "orange", text: "$100/page after 10" },
-    { kind: "orange", text: "+$250 To Add A Blog" },
+    { kind: "orange", text: "Includes an Editable Blog" },
     { kind: "amber", text: "+$75/mo Unlimited Edits" },
     { kind: "x", text: "24/7 Support" },
     { kind: "x", text: "Lifetime Updates" },
@@ -90,18 +94,19 @@ function FeatureIcon({ kind }: { kind: FeatureKind }) {
 }
 
 function PricingCard({ card }: { card: Card }) {
+  const Icon = card.icon;
   return (
     <div
-      className={`relative bg-wood-900 border rounded-2xl p-8 w-full max-w-md ${
+      className={`relative bg-wood-900 border rounded-2xl p-8 w-full max-w-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-orange ${
         card.recommended ? "border-orange" : "border-wood-800"
       }`}
     >
       {card.recommended && (
-        <span className="absolute -top-3 right-6 bg-orange text-white text-xs uppercase font-bold px-3 py-1 rounded-full">
+        <span className="absolute -top-3 right-6 bg-orange text-white text-xs uppercase font-bold px-3 py-1 rounded-full animate-[badge-pulse_2s_ease-in-out_infinite]">
           Recommended
         </span>
       )}
-      <Rocket className="w-8 h-8 text-orange" />
+      <Icon className="w-8 h-8 text-orange" />
       <h3 className="text-white font-bold text-xl mt-4">{card.title}</h3>
       <div className="mt-2">
         <span className="text-4xl font-bold text-white">{card.price}</span>
@@ -130,46 +135,55 @@ export function PricingSection() {
   const cards =
     mode === "subscription" ? [subStarter, subGrowth] : [lumpStarter, lumpGrowth];
 
-  const tabClass = (active: boolean) =>
-    `rounded-full px-6 py-2 font-semibold transition ${
-      active
-        ? "bg-orange text-white"
-        : "bg-transparent text-wood-400 hover:text-wood-200"
-    }`;
-
   return (
     <section className="bg-wood-950 py-20 px-6 lg:px-20">
       <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold text-center">
-        Canadian Website Design
+        Website Design Pricing
       </p>
       <h2 className="mt-2 text-white text-3xl lg:text-4xl font-bold text-center">
         Fair Prices. Beautiful Websites.
       </h2>
       <p className="mt-4 text-wood-400 text-lg max-w-2xl mx-auto text-center">
-        Straightforward pricing, honest work. Good websites don't need expensive
-        price tags.
+        Straightforward pricing, honest work. Great websites don't need
+        expensive price tags — they just need to perform for your business.
       </p>
 
       <div className="mt-8 flex justify-center">
-        <div className="bg-wood-800 rounded-full p-1 inline-flex">
+        <div className="relative bg-wood-800 rounded-full p-1 inline-flex w-[280px]">
+          <span
+            aria-hidden
+            className="absolute top-1 bottom-1 left-1 rounded-full bg-orange transition-transform duration-300 ease-out"
+            style={{
+              width: "calc(50% - 0.25rem)",
+              transform:
+                mode === "lump" ? "translateX(100%)" : "translateX(0)",
+            }}
+          />
           <button
             type="button"
             onClick={() => setMode("subscription")}
-            className={tabClass(mode === "subscription")}
+            className={`relative z-10 flex-1 rounded-full py-2 font-semibold transition-colors ${
+              mode === "subscription" ? "text-white" : "text-wood-400"
+            }`}
           >
             Subscription
           </button>
           <button
             type="button"
             onClick={() => setMode("lump")}
-            className={tabClass(mode === "lump")}
+            className={`relative z-10 flex-1 rounded-full py-2 font-semibold transition-colors ${
+              mode === "lump" ? "text-white" : "text-wood-400"
+            }`}
           >
             Lump Sum
           </button>
         </div>
       </div>
 
-      <div className="mt-10 flex flex-col lg:flex-row gap-8 justify-center max-w-4xl mx-auto">
+      <div
+        key={mode}
+        className="mt-10 flex flex-col lg:flex-row gap-8 justify-center max-w-4xl mx-auto animate-fade-in"
+      >
         {cards.map((card) => (
           <PricingCard key={card.title + card.priceSuffix} card={card} />
         ))}
