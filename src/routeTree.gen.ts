@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -26,6 +27,11 @@ const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/reviews': typeof ReviewsRoute
   '/services': typeof ServicesRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/reviews': typeof ReviewsRoute
   '/services': typeof ServicesRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/reviews': typeof ReviewsRoute
   '/services': typeof ServicesRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/privacy-policy'
+    | '/reviews'
     | '/services'
     | '/terms-of-service'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/privacy-policy'
+    | '/reviews'
     | '/services'
     | '/terms-of-service'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/privacy-policy'
+    | '/reviews'
     | '/services'
     | '/terms-of-service'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PricingRoute: typeof PricingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  ReviewsRoute: typeof ReviewsRoute
   ServicesRoute: typeof ServicesRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy': {
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PricingRoute: PricingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  ReviewsRoute: ReviewsRoute,
   ServicesRoute: ServicesRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
 }
