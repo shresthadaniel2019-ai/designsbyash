@@ -42,7 +42,7 @@ function ServicesPage() {
         description="From custom design to ongoing management — we handle it all."
       />
 
-      <section className="bg-wood-50 py-16 px-6 lg:px-20">
+      <section className="bg-wood-50 dark:bg-wood-900 py-16 px-6 lg:px-20">
         <div className="flex flex-col">
           {rows.map((row, i) => (
             <div
@@ -52,14 +52,14 @@ function ServicesPage() {
               }`}
             >
               <div className="lg:w-1/2 w-full">
-                <div className="w-full aspect-video bg-wood-200 rounded-xl flex items-center justify-center text-wood-400 text-sm">
+                <div className="w-full aspect-video bg-wood-200 dark:bg-wood-800 rounded-xl flex items-center justify-center text-wood-400 text-sm">
                   Service Image
                 </div>
               </div>
               <div className="lg:w-1/2">
-                <h2 className="text-wood-950 text-2xl font-bold">{row.title}</h2>
-                <p className="mt-4 text-wood-600 leading-relaxed">{row.p1}</p>
-                <p className="mt-3 text-wood-600 leading-relaxed">{row.p2}</p>
+                <h2 className="text-wood-950 dark:text-white text-2xl font-bold">{row.title}</h2>
+                <p className="mt-4 text-wood-600 dark:text-wood-300 leading-relaxed">{row.p1}</p>
+                <p className="mt-3 text-wood-600 dark:text-wood-300 leading-relaxed">{row.p2}</p>
                 <Link
                   to="/contact"
                   className="mt-4 inline-block text-orange font-semibold hover:text-amber transition"
