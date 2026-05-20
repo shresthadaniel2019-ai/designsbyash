@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 const inputClass =
-  "bg-white border border-wood-200 rounded-md px-4 py-3 w-full text-wood-950 placeholder:text-wood-400 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition";
+  "bg-white dark:bg-wood-800 border border-wood-200 dark:border-wood-700 rounded-md px-4 py-3 w-full text-wood-950 dark:text-white placeholder:text-wood-400 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition";
 
 function Field({
   label,
@@ -27,7 +27,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-wood-950 font-semibold text-sm mb-1">
+      <span className="block text-wood-950 dark:text-white font-semibold text-sm mb-1">
         {label}
       </span>
       {children}
