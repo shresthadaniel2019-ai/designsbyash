@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
  * suffix around the number (e.g. "500K+", "100%", "5/5").
  */
 export function useCountUp(value: string, duration = 1000) {
-  const ref = useRef<HTMLSpanElement | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const [display, setDisplay] = useState(value);
   const startedRef = useRef(false);
 
