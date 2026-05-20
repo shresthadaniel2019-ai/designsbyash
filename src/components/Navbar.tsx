@@ -54,13 +54,26 @@ export function Navbar() {
         ))}
       </nav>
 
-      <div className="hidden md:block">
+      <div className="hidden md:flex items-center gap-2">
+        <ThemeToggle />
         <Link
           to="/contact"
           className="bg-orange text-white px-5 py-2.5 rounded-md font-semibold hover:bg-orange-hover transition"
         >
           Get a Quote
         </Link>
+      </div>
+
+      <div className="md:hidden flex items-center gap-2">
+        <ThemeToggle />
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="text-white"
+          aria-label="Open menu"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
       </div>
 
       <button
