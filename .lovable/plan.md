@@ -1,45 +1,80 @@
-## Plan: Fix dark/light mode and hero divider
+## Plan: Pricing system update
 
-### 1. `src/styles.css`
-- Remove the global dark-mode overrides that force `bg-wood-950`, `bg-wood-50`, `bg-white`, and `text-wood-*` colors to invert. They cause "always-dark" sections to flip and override `dark:` variants.
-  - Drop: `.dark .bg-white`, `.dark .bg-wood-50`, `.dark .bg-wood-100`, `.dark .bg-wood-200`, `.dark .text-wood-950/900/800/700/600`, `.dark .border-wood-100/200/300`, `.dark input/textarea/select`.
-- Keep the `:root` and `.dark` semantic token overrides (`--color-background`, `--color-foreground`, etc.) so shadcn components still themed.
-- Rewrite `.hero-divider`: simple gradient fade instead of clip-path.
-  ```css
-  .hero-divider {
-    position: relative;
-    z-index: 1;
-    height: 60px;
-    margin-top: -1px;
-    background: linear-gradient(to bottom, #09090b 0%, transparent 100%);
-    pointer-events: none;
-  }
+### 1. `src/components/PricingSection.tsx`
+
+**Data changes**
+- `subStarter.features`: drop `"+$250 To Add A Blog"` line.
+- `lumpStarter.features`: drop `"+$250 To Add A Blog"` line.
+- `subGrowth`: keep existing `"Includes an Editable Blog"`.
+- `lumpGrowth`: replace `"+$250 To Add A Blog"` with `"Includes an Editable Blog"`.
+
+**Icons**
+- Import `Zap` alongside `Rocket`. Add `icon` field on `Card`. Starter → `Zap`, Growth → `Rocket`. `PricingCard` renders `<card.icon …>`.
+
+**Toggle (animated pill slider)**
+- Container: `relative bg-wood-800 rounded-full p-1 inline-flex w-[280px]`.
+- Two equal-width buttons (`flex-1 z-10`), text white when active else `text-wood-400`.
+- Absolute slider behind them: `absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-orange transition-transform duration-300 ease-out`, with `style={{ transform: mode === "lump" ? "translateX(100%)" : "translateX(0)" }}`.
+
+**Cards crossfade**
+- Wrap the cards grid in a keyed container `<div key={mode} className="animate-fade-in">` using the existing Tailwind `animate-fade-in` keyframes from the project.
+
+**Card hover + recommended pulse**
+- Add to `PricingCard` root: `transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-orange`.
+- Add CSS keyframe `badge-pulse` (1 → 1.05 → 1, 2s infinite) in `src/styles.css`; apply `animate-[badge-pulse_2s_ease-in-out_infinite]` to the Recommended badge span.
+
+**Copy**
+- Eyebrow: `"Website Design Pricing"`.
+- Heading: `"Fair Prices. Beautiful Websites."` (already).
+- Description: `"Straightforward pricing, honest work. Great websites don't need expensive price tags — they just need to perform for your business."`.
+
+Dark mode: cards/toggle already use literal `bg-wood-900/800` which now stay dark in both modes — no changes.
+
+### 2. `src/styles.css`
+Append:
+```css
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+```
+(Fade-in keyframe already provided via `tw-animate-css` / Tailwind defaults — verify; if missing, add `fade-in` keyframe.)
+
+### 3. `src/routes/pricing.tsx`
+
+**FAQ data** — replace existing `faqs` with the 5 new Q/A pairs from the spec.
+
+**FAQItem accordion animation**
+```tsx
+<div className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+  <div className="overflow-hidden">
+    <p className={`text-wood-600 dark:text-wood-300 text-sm pt-2 transition-opacity duration-200 delay-100 ${open ? "opacity-100" : "opacity-0"}`}>
+      {a}
+    </p>
+  </div>
+</div>
+```
+Chevron already has `transition-transform`; bump to `duration-200`.
+
+**Scroll reveal with stagger**
+- Import `useScrollReveal` from `@/hooks/useScrollReveal`.
+- `FAQItem` accepts `delay` (1..5), root div gets `ref={useScrollReveal()}` and `className="reveal reveal-delay-${delay} border-b …"`.
+- Map index → `delay={(i % 5) + 1}`.
+
+**Footer link + BottomCTA**
+- Below the FAQ list:
+  ```tsx
+  <Link to="/faq" className="mt-8 inline-block text-orange font-semibold hover:underline">
+    Have more questions? Visit our full FAQ page →
+  </Link>
   ```
+  Note: `/faq` route does not exist yet; this will fail TanStack Router's typed `<Link to>` typecheck. Use `<a href="/faq">` instead to avoid creating the route in this change.
+- Add `<BottomCTA />` after the FAQ section. Import from `@/components/PageBits`.
 
-### 2. `src/routes/index.tsx`
-Apply explicit Tailwind classes per the spec:
+**Dark mode**
+- Section already updated to `bg-wood-50 dark:bg-wood-900` in previous turn; FAQ item border + text classes already use `dark:` variants. Verify intact.
 
-- **Hero**: `bg-wood-950` (no dark variant). Already correct — verify text classes use literal `text-white` / `text-wood-400` (these no longer get inverted after step 1).
-- **YouTubeExplainer, Services, FeaturesStats, MidScrollCTA, FinalCTA**: keep `bg-wood-950` only, text stays `text-white` / `text-wood-400`.
-- **MeetTheTeam**, **PageSpeed**, **VideoTestimonials**: change section background to `bg-wood-50 dark:bg-wood-900`.
-  - Headings: `text-wood-950 dark:text-white`
-  - Body paragraphs: `text-wood-600 dark:text-wood-300`
-  - Sub-labels (`text-wood-500`, `text-wood-400` placeholders): add `dark:text-wood-400`
-  - Inner cards in VideoTestimonials: `bg-white dark:bg-wood-800`
-  - Photo / screenshot placeholders: `bg-wood-200 dark:bg-wood-800`
-- Hero JSX: remove the old `<div className="hero-divider" />` if it sits inside the Hero fragment with weird wrapping — keep it placed immediately after `</section>` with no margin, so the gradient blends seamlessly.
-
-### 3. `src/components/Navbar.tsx`
-Already uses `bg-wood-950` + `text-white` literally. After step 1 removes the inversion overrides, navbar stays dark in both modes automatically. No change needed beyond verifying.
-
-### 4. `src/components/Footer.tsx`
-Verify it uses `bg-wood-950` with literal white/light text classes. If it relies on `text-wood-600` for body text expecting dark-mode inversion, swap to `text-wood-400` so it stays readable on the dark background in both modes. (Will read the file during implementation and adjust only if needed.)
-
-### 5. Other routes (about, contact, services, pricing, privacy, terms)
-These routes previously depended on the global `.dark .bg-wood-50` / `.dark .text-wood-950` overrides for dark mode. After removing those overrides, they will appear light in dark mode. Add `dark:` variants to their section backgrounds and text colors so they continue to respond to the toggle:
-- Section bg: `bg-wood-50` → `bg-wood-50 dark:bg-wood-900`, `bg-white` → `bg-white dark:bg-wood-800`
-- Headings/body text: add matching `dark:text-white` / `dark:text-wood-300`
-- Form inputs: `dark:bg-wood-800 dark:border-wood-700 dark:text-white`
+**Meta** — already matches spec; no change.
 
 ### Verification
-- Toggle theme in preview, confirm: hero/navbar/footer/always-dark sections stay dark; MeetTheTeam/PageSpeed/VideoTestimonials swap between `wood-50` and `wood-900`; divider blends without a visible triangle; other routes still respond to dark mode.
+After edits: toggle subscription/lump → pill slides and cards crossfade; hover a card → lifts with emerald border; Recommended badge pulses gently; open/close an FAQ → smooth height + text fade; FAQ items reveal on scroll with stagger; both themes render correctly.
