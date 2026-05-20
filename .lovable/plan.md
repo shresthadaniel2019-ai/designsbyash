@@ -1,80 +1,65 @@
-## Plan: Pricing system update
+# Plan: About / Contact refresh + FAQ + Reviews pages
 
-### 1. `src/components/PricingSection.tsx`
+## Files
 
-**Data changes**
-- `subStarter.features`: drop `"+$250 To Add A Blog"` line.
-- `lumpStarter.features`: drop `"+$250 To Add A Blog"` line.
-- `subGrowth`: keep existing `"Includes an Editable Blog"`.
-- `lumpGrowth`: replace `"+$250 To Add A Blog"` with `"Includes an Editable Blog"`.
+1. **`src/routes/about.tsx`** — rewrite
+2. **`src/routes/contact.tsx`** — refresh
+3. **`src/routes/faq.tsx`** — new
+4. **`src/routes/reviews.tsx`** — new
+5. **`src/styles.css`** — minor: add `.hover-lift` helpers if needed; otherwise use Tailwind classes inline
 
-**Icons**
-- Import `Zap` alongside `Rocket`. Add `icon` field on `Card`. Starter → `Zap`, Growth → `Rocket`. `PricingCard` renders `<card.icon …>`.
+No changes to `routeTree.gen.ts` (auto-generated). No changes to `PageBits.tsx` or `useScrollReveal.ts`.
 
-**Toggle (animated pill slider)**
-- Container: `relative bg-wood-800 rounded-full p-1 inline-flex w-[280px]`.
-- Two equal-width buttons (`flex-1 z-10`), text white when active else `text-wood-400`.
-- Absolute slider behind them: `absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-orange transition-transform duration-300 ease-out`, with `style={{ transform: mode === "lump" ? "translateX(100%)" : "translateX(0)" }}`.
+## Shared patterns
 
-**Cards crossfade**
-- Wrap the cards grid in a keyed container `<div key={mode} className="animate-fade-in">` using the existing Tailwind `animate-fade-in` keyframes from the project.
+- All animated blocks use `useScrollReveal()` returning a ref, applying `reveal` + optional `reveal-delay-N` (already defined in `styles.css`).
+- Hover lift on cards: `transition-all duration-300 hover:-translate-y-1 hover:shadow-xl` (use `-translate-y-1.5` for steps).
+- Dark mode: light sections `bg-wood-50 dark:bg-wood-900`; dark sections stay `bg-wood-950`; text `text-wood-950 dark:text-white` / `text-wood-600 dark:text-wood-300`.
+- Note: `--color-orange` token is the emerald green (#10b981) — keep using `bg-orange` / `text-orange`.
 
-**Card hover + recommended pulse**
-- Add to `PricingCard` root: `transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-orange`.
-- Add CSS keyframe `badge-pulse` (1 → 1.05 → 1, 2s infinite) in `src/styles.css`; apply `animate-[badge-pulse_2s_ease-in-out_infinite]` to the Recommended badge span.
+## 1. About page
 
-**Copy**
-- Eyebrow: `"Website Design Pricing"`.
-- Heading: `"Fair Prices. Beautiful Websites."` (already).
-- Description: `"Straightforward pricing, honest work. Great websites don't need expensive price tags — they just need to perform for your business."`.
+Sections in order:
+1. `PageHero` — eyebrow "About Us", new title + description.
+2. **Our Story** (`bg-wood-50 dark:bg-wood-900`) — two-column: square `Team Photo` placeholder left; heading + 3 paragraphs + 3 value bullets (Check icons in `text-orange`) right. Each column wrapped in its own reveal ref.
+3. **Our Process** (`bg-wood-950`, white text both modes) — heading + subtext + 3-card horizontal grid (`grid md:grid-cols-3 gap-6`). Each step card: number badge (01/02/03) in `bg-orange text-white rounded-full`, title, copy. Hover lift; staggered reveal (`reveal-delay-1/2/3`).
+4. **Contact CTA** (`bg-wood-50 dark:bg-wood-900`) — heading + subtext + 3 contact cards (`grid md:grid-cols-3 gap-6`): Phone, Mail, MapPin from lucide-react in emerald circle. Card style `bg-white dark:bg-wood-800 rounded-xl shadow-md p-6 text-center` with hover lift; staggered reveal. Email/phone as `<a href="mailto:" />` / `tel:` links.
+5. `BottomCTA`.
 
-Dark mode: cards/toggle already use literal `bg-wood-900/800` which now stay dark in both modes — no changes.
+## 2. FAQ page (new)
 
-### 2. `src/styles.css`
-Append:
-```css
-@keyframes badge-pulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.05); }
-}
-```
-(Fade-in keyframe already provided via `tw-animate-css` / Tailwind defaults — verify; if missing, add `fade-in` keyframe.)
+- Route: `/faq` with required `head()` meta.
+- `PageHero` + FAQ section + `BottomCTA`.
+- FAQ section (`bg-wood-50 dark:bg-wood-900`):
+  - Tab pill row: 3 buttons in `bg-wood-200 dark:bg-wood-800 rounded-full p-1` container; active button `bg-orange text-white`, inactive transparent + `text-wood-500 dark:text-wood-400`; `transition-colors duration-300`.
+  - Tab state via `useState<'finances'|'packages'|'websites'>`.
+  - For each tab render `FAQItem` list with the supplied Q/A content. Item structure:
+    - `<button>` row: question text + ChevronDown that rotates 180° when open (`transition-transform duration-200`).
+    - Answer panel using grid trick: outer `grid transition-[grid-template-rows] duration-300 ease-out` with `grid-rows-[0fr]` closed / `grid-rows-[1fr]` open; inner `overflow-hidden` with padded paragraph.
+  - Border `border-b border-wood-200 dark:border-wood-700` per item.
+  - Wrap the visible tab content in `useScrollReveal()` ref (re-mount via `key={activeTab}` so animation runs on tab change).
 
-### 3. `src/routes/pricing.tsx`
+## 3. Reviews page (new)
 
-**FAQ data** — replace existing `faqs` with the 5 new Q/A pairs from the spec.
+- Route: `/reviews` with required `head()` meta.
+- `PageHero` + reviews section + `BottomCTA`.
+- Reviews section (`bg-wood-50 dark:bg-wood-900`):
+  - Container: `columns-1 md:columns-2 lg:columns-3 gap-6`.
+  - 9 cards, each `break-inside-avoid mb-6 bg-white dark:bg-wood-800 rounded-xl shadow-md p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl`.
+  - Card body: avatar circle (initials), 5 amber Star icons + "5.0", italic quote, name (bold), "Owner, Business Name" muted.
+  - Each card uses `useScrollReveal()` via a `RevealCard` wrapper; stagger by cycling `reveal-delay-1..3`.
 
-**FAQItem accordion animation**
-```tsx
-<div className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-  <div className="overflow-hidden">
-    <p className={`text-wood-600 dark:text-wood-300 text-sm pt-2 transition-opacity duration-200 delay-100 ${open ? "opacity-100" : "opacity-0"}`}>
-      {a}
-    </p>
-  </div>
-</div>
-```
-Chevron already has `transition-transform`; bump to `duration-200`.
+## 4. Contact page refresh
 
-**Scroll reveal with stagger**
-- Import `useScrollReveal` from `@/hooks/useScrollReveal`.
-- `FAQItem` accepts `delay` (1..5), root div gets `ref={useScrollReveal()}` and `className="reveal reveal-delay-${delay} border-b …"`.
-- Map index → `delay={(i % 5) + 1}`.
+- Keep existing `PageHero`.
+- Replace section body with two-column layout using new styles:
+  - Left form: same fields; button gets `hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all duration-300`. Inputs get `transition-colors duration-200 focus:border-orange focus:ring-1 focus:ring-orange`.
+  - Right column: Book a Call heading + subtext + Calendly placeholder (dashed border) + Contact Info list with Clock/Phone/Mail/MapPin icons in `text-orange` and copy in `text-wood-600 dark:text-wood-300`.
+- Wrap left/right columns in their own `useScrollReveal()` refs (different delays).
+- Append `BottomCTA`.
+- Update meta description.
 
-**Footer link + BottomCTA**
-- Below the FAQ list:
-  ```tsx
-  <Link to="/faq" className="mt-8 inline-block text-orange font-semibold hover:underline">
-    Have more questions? Visit our full FAQ page →
-  </Link>
-  ```
-  Note: `/faq` route does not exist yet; this will fail TanStack Router's typed `<Link to>` typecheck. Use `<a href="/faq">` instead to avoid creating the route in this change.
-- Add `<BottomCTA />` after the FAQ section. Import from `@/components/PageBits`.
+## Verification
 
-**Dark mode**
-- Section already updated to `bg-wood-50 dark:bg-wood-900` in previous turn; FAQ item border + text classes already use `dark:` variants. Verify intact.
-
-**Meta** — already matches spec; no change.
-
-### Verification
-After edits: toggle subscription/lump → pill slides and cards crossfade; hover a card → lifts with emerald border; Recommended badge pulses gently; open/close an FAQ → smooth height + text fade; FAQ items reveal on scroll with stagger; both themes render correctly.
+- Build passes (typecheck strict).
+- Manually verify in preview: tabs switch with pill slide-style color transition, accordion expands smoothly, masonry doesn't split cards, dark/light mode classes correct on every section, scroll-reveal triggers once.
