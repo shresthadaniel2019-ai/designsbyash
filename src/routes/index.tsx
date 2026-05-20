@@ -268,7 +268,7 @@ const stats = [
 ];
 
 function StatItem({ value, label }: { value: string; label: string }) {
-  const { ref, display } = useCountUp(value);
+  const { ref, display } = useCountUp<HTMLParagraphElement>(value);
   return (
     <div>
       <p ref={ref} className="text-4xl font-bold text-orange">
