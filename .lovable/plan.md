@@ -1,65 +1,75 @@
-## Visual Foundation Overhaul
+# Homepage Rewrite Plan
 
-Recolor the entire site (grays → zinc, orange → emerald) and add a class-based dark mode with a theme toggle.
+## 1. New scroll-reveal utility
 
-### 1. `src/styles.css` — color tokens + dark mode
+**Create `src/hooks/useScrollReveal.ts`**
+- Custom hook returning a ref
+- Uses `IntersectionObserver` (threshold 0.15, rootMargin "0px 0px -50px 0px")
+- Adds `visible` class on intersect, disconnects after first reveal
+- SSR-safe (guard `typeof window`)
 
-- Replace every value inside `@theme` per the spec (keep `wood-*` and `orange*` names so no component needs to change).
-- Add a `@custom-variant dark (&:where(.dark, .dark *));` so Tailwind's `dark:` utilities work with the class strategy.
-- Add a `.dark { ... }` block that overrides the semantic tokens for dark mode:
-  - `--color-background: #09090b`, `--color-foreground: #fafafa`
-  - `--color-card: #27272a`, `--color-card-foreground: #fafafa`
-  - `--color-popover: #27272a`, `--color-popover-foreground: #fafafa`
-  - `--color-border: #3f3f46`, `--color-input: #3f3f46`
-  - `--color-secondary / muted / accent: #27272a` with `#fafafa` foreground
-  - `--color-muted-foreground: #a1a1aa`
-- Add scoped element overrides under `.dark` for the existing palette usage so all pages flip without rewriting components:
-  - `.dark .bg-white { background-color: #27272a; }`
-  - `.dark .bg-wood-50 { background-color: #18181b; }`
-  - `.dark .bg-wood-100 { background-color: #27272a; }`
-  - `.dark .bg-wood-950` stays `#09090b` (already correct)
-  - `.dark .text-wood-950 { color: #fafafa; }`
-  - `.dark .text-wood-900 { color: #f4f4f5; }`
-  - `.dark .text-wood-700 { color: #d4d4d8; }`
-  - `.dark .text-wood-600 { color: #a1a1aa; }`
-  - `.dark .border-wood-200 { border-color: #3f3f46; }`
-  - `.dark .border-wood-100 { border-color: #3f3f46; }`
-  - Form inputs: `.dark input, .dark textarea, .dark select { background-color: #27272a; color: #fafafa; border-color: #3f3f46; }`
+**Edit `src/styles.css`** — append:
+```css
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 600ms ease-out, transform 600ms ease-out; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 100ms; }
+.reveal-delay-2 { transition-delay: 200ms; }
+.reveal-delay-3 { transition-delay: 300ms; }
+.reveal-delay-4 { transition-delay: 400ms; }
+.reveal-delay-5 { transition-delay: 500ms; }
 
-This scoped-override approach means we don't have to touch every page file.
+.hero-divider {
+  height: 80px;
+  background: var(--color-wood-950);
+  clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);
+}
+```
 
-### 2. `src/components/ThemeProvider.tsx` (new)
+**Create `src/hooks/useCountUp.ts`** — animates a number from 0 to target over ~1s once revealed. Handles non-numeric values (`5/5`, `100%`, `500K+`) by parsing the leading number and re-appending the suffix.
 
-- React context with `theme: "light" | "dark"` and `toggleTheme()` / `setTheme()`.
-- On mount: read `localStorage.getItem("theme")`, default `"light"`, apply/remove `dark` class on `document.documentElement`.
-- On change: persist to localStorage and update the html class.
-- Export `useTheme()` hook.
+## 2. Rewrite `src/routes/index.tsx`
 
-### 3. `src/components/ThemeToggle.tsx` (new)
+Sections in order, all with `.reveal` on key blocks:
 
-- Small button using `lucide-react` `Sun` / `Moon` icons, calls `toggleTheme()`.
-- Styled to fit the navbar (`text-wood-300 hover:text-orange`).
+1. **Hero** — keep copy. Replace mockup placeholder text with a fake browser window frame (top bar w/ 3 red/yellow/green dots, empty body). Replace treeline divider div with `<div className="hero-divider dark:hero-divider" />`. Apply reveal to headline/sub/CTA and mockup.
 
-### 4. `src/components/Navbar.tsx`
+2. **YouTubeExplainer** — same copy, dark mode classes, reveal on text + video; "Start Today →" gets `hover:text-emerald-400` (use existing `hover:text-amber` token which is now emerald-light).
 
-- Import and render `<ThemeToggle />` next to the "Get a Quote" button (desktop) and in the mobile drawer.
+3. **Services** — 6 cards, last card replaced:
+   - Icon: `Users` (lucide)
+   - Title: "Dedicated Partnership"
+   - Desc: "You work directly with our team — no outsourcing, no runaround. When you reach out, a real person who knows your project responds."
+   - Update section description to remove "across Canada and beyond" → "who demand performance, quality, and results."
+   - Cards: add `hover:-translate-y-2 hover:shadow-2xl hover:border-orange transition-all duration-300`
+   - Stagger reveal across cards (delay-1..delay-5 cycling)
 
-### 5. `src/routes/__root.tsx`
+4. **MeetTheTeam** — drop Edmonton/Alberta wording. New paragraph as specified. Reveal on text + photo.
 
-- Wrap `RootComponent`'s tree in `<ThemeProvider>`.
-- In `RootShell`, add an inline `<script>` in `<head>` that runs before render:
-  ```js
-  (function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();
-  ```
-  This prevents the light-mode flash on first paint.
+5. **FeaturesStats** — update description to spec. Reveal staggered features. Stats use `useCountUp` triggered on reveal.
 
-### Out of scope / preserved
+6. **PageSpeed** — reveal both columns. Dark mode classes verified.
 
-- No component logic changes. No new pages. Existing route files keep their current class names — the dark overrides in `styles.css` do the visual flip.
-- Footer, legal pages, hero sections all inherit the new palette automatically.
+7. **PricingSection** — render existing component as-is.
 
-### Verification
+8. **VideoTestimonials (NEW)** — horizontally scrollable row of 8 cards with snap, Play icon, 5 stars (amber/emerald), placeholder quote, chevron buttons (emerald, hidden on mobile), card hover `-translate-y-1 + shadow-lg`. Min-width 350px desktop / 85vw mobile.
 
-- Build passes.
-- Toggle in navbar flips the site; preference persists across reloads.
-- No flash of light theme when reloading in dark mode.
+9. **MidScrollCTA (NEW)** — `bg-wood-950` section, centered heading "Convinced Yet?", subtext as specified, emerald "Let's Talk" button linking to `/contact` with `hover:scale-105` glow.
+
+10. **FinalCTA** — keep, add reveal.
+
+**Removed:** TestimonialsCarousel, FeaturedWork, WrittenTestimonials (delete all code, unused imports/icons).
+
+**Meta title:** "DesignsbyASH — Small Business Website Design That Delivers"
+
+## 3. Dark mode
+
+Light sections continue to use `bg-wood-50` and existing `.dark .bg-wood-50` override (→ `#18181b`) in styles.css handles the swap. Dark sections (`bg-wood-950`) remain dark. No per-section `dark:` variants required — overrides already in `styles.css` flip backgrounds/text/borders globally.
+
+## Files touched
+
+- `src/hooks/useScrollReveal.ts` (new)
+- `src/hooks/useCountUp.ts` (new)
+- `src/styles.css` (append reveal + divider rules)
+- `src/routes/index.tsx` (full rewrite)
+
+No changes to `PricingSection`, `Navbar`, `Footer`, `ThemeProvider`, route tree, or other routes.
