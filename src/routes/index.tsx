@@ -215,13 +215,13 @@ function MeetTheTeam() {
   const photoRef = useScrollReveal();
   const textRef = useScrollReveal();
   return (
-    <section className="bg-wood-50 py-20 px-6 lg:px-20">
+    <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         <div ref={photoRef} className="lg:w-2/5 w-full reveal">
-          <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 rounded-2xl flex items-center justify-center mx-auto">
+          <div className="w-full max-w-sm aspect-[3/4] bg-wood-200 dark:bg-wood-800 rounded-2xl flex items-center justify-center mx-auto">
             <span className="text-wood-400">Team Photo</span>
           </div>
-          <p className="mt-4 text-center text-lg font-bold text-wood-950">
+          <p className="mt-4 text-center text-lg font-bold text-wood-950 dark:text-white">
             Designsby<span className="text-orange">ASH</span>
           </p>
         </div>
@@ -230,11 +230,11 @@ function MeetTheTeam() {
           <p className="text-orange uppercase tracking-[0.2em] text-sm font-semibold">
             Meet the Team
           </p>
-          <h2 className="mt-2 text-wood-950 text-3xl font-bold">
+          <h2 className="mt-2 text-wood-950 dark:text-white text-3xl font-bold">
             The People Behind the Pixels
           </h2>
-          <p className="mt-1 text-wood-500 text-lg">Design &amp; Development</p>
-          <p className="mt-4 text-wood-600 leading-relaxed">
+          <p className="mt-1 text-wood-500 dark:text-wood-400 text-lg">Design &amp; Development</p>
+          <p className="mt-4 text-wood-600 dark:text-wood-300 leading-relaxed">
             We're a team of dedicated web designers and developers who
             specialize in hand-coded, lightning-fast websites for small
             businesses. Every project gets our full attention — your business
