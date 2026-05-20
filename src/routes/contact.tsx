@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHero } from "@/components/PageBits";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { BottomCTA, PageHero } from "@/components/PageBits";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -16,7 +18,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 const inputClass =
-  "bg-white dark:bg-wood-800 border border-wood-200 dark:border-wood-700 rounded-md px-4 py-3 w-full text-wood-950 dark:text-white placeholder:text-wood-400 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition";
+  "bg-white dark:bg-wood-800 border border-wood-200 dark:border-wood-700 rounded-md px-4 py-3 w-full text-wood-950 dark:text-white placeholder:text-wood-400 dark:placeholder:text-wood-500 focus:border-orange focus:ring-1 focus:ring-orange outline-none transition-colors duration-200";
 
 function Field({
   label,
@@ -36,6 +38,8 @@ function Field({
 }
 
 function ContactPage() {
+  const formRef = useScrollReveal<HTMLDivElement>();
+  const infoRef = useScrollReveal<HTMLDivElement>();
   return (
     <>
       <PageHero
@@ -44,9 +48,9 @@ function ContactPage() {
         description="Reach out and we'll get back to you within 24 hours."
       />
 
-      <section className="bg-wood-50 dark:bg-wood-900 py-16 px-6 lg:px-20">
-        <div className="flex flex-col lg:flex-row gap-12">
-          <div className="lg:w-1/2">
+      <section className="bg-wood-50 dark:bg-wood-900 py-20 px-6 lg:px-20">
+        <div className="flex flex-col lg:flex-row gap-12 max-w-7xl mx-auto">
+          <div ref={formRef} className="reveal lg:w-1/2">
             <form
               onSubmit={(e) => e.preventDefault()}
               className="flex flex-col gap-4"
@@ -85,34 +89,48 @@ function ContactPage() {
               </Field>
               <button
                 type="submit"
-                className="bg-orange text-white w-full py-3 rounded-md font-semibold mt-2 hover:bg-orange-hover transition"
+                className="bg-orange text-white w-full py-3 rounded-md font-semibold mt-2 transition-all duration-300 hover:bg-orange-hover hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
               >
                 Send Message
               </button>
             </form>
           </div>
 
-          <div className="lg:w-1/2">
+          <div ref={infoRef} className="reveal reveal-delay-1 lg:w-1/2">
             <h3 className="text-wood-950 dark:text-white font-bold text-xl">Book a Call</h3>
             <p className="text-wood-600 dark:text-wood-300 mt-2">
               Calendly integration coming soon.
             </p>
-            <div className="mt-4 w-full h-64 bg-wood-100 dark:bg-wood-800 rounded-xl border-2 border-dashed border-wood-300 dark:border-wood-700 flex items-center justify-center text-wood-400">
+            <div className="mt-4 w-full h-64 bg-wood-100 dark:bg-wood-800 rounded-xl border-2 border-dashed border-wood-300 dark:border-wood-600 flex items-center justify-center text-wood-400">
               Calendly Embed Placeholder
             </div>
 
             <h3 className="mt-8 text-wood-950 dark:text-white font-bold text-xl">
               Contact Info
             </h3>
-            <div className="mt-4 text-wood-600 dark:text-wood-300 text-sm flex flex-col gap-2">
-              <span>M–F 9am – 5pm MST</span>
-              <span>(XXX) XXX-XXXX</span>
-              <span>hello@designsbyash.com</span>
-              <span>Edmonton, AB, Canada</span>
-            </div>
+            <ul className="mt-4 flex flex-col gap-3 text-wood-600 dark:text-wood-300">
+              <li className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-orange flex-shrink-0" />
+                <span>M–F 8am – 5:00pm</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-orange flex-shrink-0" />
+                <a href="tel:+14379852163" className="hover:text-orange transition-colors">(437)-985-2163</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-orange flex-shrink-0" />
+                <a href="mailto:designsbyash0@gmail.com" className="hover:text-orange transition-colors">designsbyash0@gmail.com</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-orange flex-shrink-0" />
+                <span>Edmonton, AB</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
+
+      <BottomCTA />
     </>
   );
 }
