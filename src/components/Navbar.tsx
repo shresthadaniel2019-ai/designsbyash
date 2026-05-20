@@ -76,14 +76,6 @@ export function Navbar() {
         </button>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="md:hidden text-white"
-        aria-label="Open menu"
-      >
-        <Menu className="h-6 w-6" />
-      </button>
 
       {open && (
         <div className="fixed inset-0 z-50 md:hidden">
