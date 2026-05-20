@@ -44,7 +44,7 @@ function ContactPage() {
         description="Reach out and we'll get back to you within 24 hours."
       />
 
-      <section className="bg-wood-50 py-16 px-6 lg:px-20">
+      <section className="bg-wood-50 dark:bg-wood-900 py-16 px-6 lg:px-20">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-1/2">
             <form
